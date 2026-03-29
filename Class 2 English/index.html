@@ -1,0 +1,2874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#FF6B6B">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Class 2 English">
+<meta name="description" content="JKBOSE Class 2 English Interactive Learning App by Mateen Yousuf">
+<!-- Manifest injected inline via JS to avoid 404 errors in preview -->
+<title>Class 2 English Learning App</title>
+
+<style>
+/* ===== CSS VARIABLES & RESET ===== */
+:root {
+  --red: #FF4757;
+  --orange: #FF6B35;
+  --yellow: #FFD93D;
+  --green: #6BCB77;
+  --teal: #4D96FF;
+  --blue: #4361EE;
+  --purple: #9B5DE5;
+  --pink: #F72585;
+  --white: #FFFFFF;
+  --dark: #2D3436;
+  --light: #F8F9FA;
+  --shadow: 0 8px 32px rgba(0,0,0,0.15);
+  --radius: 20px;
+  --font-main: 'Segoe UI', 'Comic Sans MS', cursive, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-main);
+  background: #f0f4ff;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ===== SCREENS ===== */
+.screen {
+  display: none;
+  min-height: 100vh;
+  animation: fadeIn 0.4s ease;
+}
+.screen.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== TITLE SCREEN ===== */
+#title-screen {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f64f59 50%, #c471ed 75%, #12c2e9 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 6s ease infinite;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  text-align: center;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Floating elements */
+.float-elem {
+  position: absolute;
+  animation: floatAround linear infinite;
+  font-size: 2rem;
+  opacity: 0.6;
+  pointer-events: none;
+  user-select: none;
+}
+
+@keyframes floatAround {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0.6; }
+  50% { transform: translateY(-30px) rotate(180deg); opacity: 0.9; }
+  100% { transform: translateY(0) rotate(360deg); opacity: 0.6; }
+}
+
+.title-badge {
+  background: rgba(255,255,255,0.25);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255,255,255,0.5);
+  border-radius: 50px;
+  padding: 8px 24px;
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.title-main {
+  font-size: clamp(2rem, 8vw, 3.5rem);
+  font-weight: 900;
+  color: white;
+  text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+
+.title-sub {
+  font-size: clamp(1rem, 4vw, 1.4rem);
+  color: rgba(255,255,255,0.9);
+  margin-bottom: 30px;
+  font-weight: 600;
+}
+
+/* Author Photo */
+.author-photo-wrap {
+  position: relative;
+  width: 130px;
+  height: 130px;
+  margin: 0 auto 16px;
+}
+
+.author-photo-glow {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  background: conic-gradient(#FFD93D, #FF6B35, #FF4757, #9B5DE5, #4361EE, #FFD93D);
+  animation: spinGlow 3s linear infinite;
+}
+
+@keyframes spinGlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.author-photo-inner {
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid white;
+  background: #ddd;
+  z-index: 2;
+}
+
+.author-photo-inner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.author-name {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: white;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.author-title {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.85);
+  margin-top: 4px;
+}
+
+.start-btn {
+  margin-top: 28px;
+  background: white;
+  color: var(--purple);
+  border: none;
+  border-radius: 50px;
+  padding: 16px 48px;
+  font-size: 1.3rem;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+  transition: transform 0.2s, box-shadow 0.2s;
+  animation: pulse 2s ease infinite;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.start-btn:hover { transform: scale(1.08); box-shadow: 0 12px 40px rgba(0,0,0,0.35); }
+
+/* Stars decoration */
+.star-row { display: flex; gap: 8px; margin-top: 16px; }
+.star-item { font-size: 1.5rem; animation: twinkle 1.5s ease infinite; }
+.star-item:nth-child(2) { animation-delay: 0.3s; }
+.star-item:nth-child(3) { animation-delay: 0.6s; }
+
+@keyframes twinkle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+/* ===== TOP BAR ===== */
+.top-bar {
+  background: linear-gradient(135deg, var(--blue), var(--purple));
+  color: white;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.back-btn {
+  background: rgba(255,255,255,0.25);
+  border: none;
+  border-radius: 12px;
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.back-btn:hover { background: rgba(255,255,255,0.4); }
+
+.top-bar-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  flex: 1;
+}
+
+.top-bar-stars {
+  font-size: 0.9rem;
+  font-weight: 700;
+  background: rgba(255,255,255,0.2);
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+/* ===== HOME SCREEN ===== */
+#home-screen {
+  background: linear-gradient(180deg, #e8f4fd 0%, #f0e8ff 100%);
+  min-height: 100vh;
+}
+
+.home-header {
+  background: linear-gradient(135deg, #4361EE, #9B5DE5);
+  padding: 24px 20px 32px;
+  text-align: center;
+  color: white;
+  border-radius: 0 0 40px 40px;
+  box-shadow: 0 8px 30px rgba(67,97,238,0.4);
+}
+
+.home-greet {
+  font-size: 1rem;
+  opacity: 0.85;
+  margin-bottom: 4px;
+}
+
+.home-title {
+  font-size: 1.6rem;
+  font-weight: 900;
+  margin-bottom: 12px;
+}
+
+.home-progress-bar-wrap {
+  background: rgba(255,255,255,0.25);
+  border-radius: 20px;
+  height: 12px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.home-progress-bar {
+  background: var(--yellow);
+  height: 100%;
+  border-radius: 20px;
+  transition: width 0.8s ease;
+}
+
+.home-progress-text {
+  font-size: 0.8rem;
+  opacity: 0.85;
+}
+
+.section-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--dark);
+  padding: 20px 20px 12px;
+}
+
+.nav-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 0 16px;
+}
+
+.nav-card {
+  border-radius: var(--radius);
+  padding: 20px 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: var(--shadow);
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.2); }
+.nav-card:active { transform: scale(0.97); }
+
+.nav-card .icon { font-size: 2.5rem; }
+.nav-card .label { font-size: 0.95rem; font-weight: 800; color: white; }
+.nav-card .sub { font-size: 0.75rem; color: rgba(255,255,255,0.85); }
+
+/* ===== CHAPTER LIBRARY ===== */
+#chapters-screen { background: #f8f0ff; }
+
+.chapter-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 16px;
+}
+
+.chapter-card {
+  background: white;
+  border-radius: var(--radius);
+  padding: 16px 12px;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  border: 3px solid transparent;
+}
+
+.chapter-card:hover { transform: translateY(-4px); }
+.chapter-card.completed { border-color: var(--green); }
+
+.chapter-card .ch-icon { font-size: 2.2rem; margin-bottom: 8px; display: block; }
+.chapter-card .ch-num { font-size: 0.7rem; font-weight: 800; color: #aaa; text-transform: uppercase; }
+.chapter-card .ch-name { font-size: 0.9rem; font-weight: 800; color: var(--dark); margin-top: 4px; line-height: 1.2; }
+.chapter-card .ch-stars { color: var(--yellow); font-size: 0.9rem; margin-top: 6px; }
+.chapter-card .ch-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--green);
+  color: white;
+  font-size: 0.6rem;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+/* ===== CHAPTER DETAIL ===== */
+#chapter-screen { background: #fff8f0; }
+
+.tabs-row {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  background: white;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.tabs-row::-webkit-scrollbar { display: none; }
+
+.tab-btn {
+  background: #f0f4ff;
+  border: none;
+  border-radius: 30px;
+  padding: 8px 16px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  color: var(--dark);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tab-btn.active {
+  background: var(--blue);
+  color: white;
+}
+
+.tab-content { display: none; padding: 16px; animation: fadeIn 0.3s ease; }
+.tab-content.active { display: block; }
+
+/* ===== STORY / READING SECTION ===== */
+.story-card {
+  background: white;
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+}
+
+.story-title {
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: var(--purple);
+  margin-bottom: 12px;
+}
+
+.story-text {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: var(--dark);
+}
+
+.story-text .highlight {
+  background: linear-gradient(135deg, #FFD93D40, #FF6B3540);
+  border-radius: 6px;
+  padding: 1px 4px;
+  font-weight: 700;
+  color: var(--orange);
+  cursor: pointer;
+}
+
+.grammar-box {
+  background: linear-gradient(135deg, #e8f4fd, #e0f0ff);
+  border-left: 4px solid var(--blue);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 16px;
+  margin: 12px 0;
+}
+
+.grammar-box h4 {
+  color: var(--blue);
+  font-size: 1rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.grammar-box p {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--dark);
+}
+
+/* ===== VOCABULARY FLASHCARDS ===== */
+.flashcard-container {
+  perspective: 1000px;
+  margin: 20px auto;
+  width: 280px;
+  height: 200px;
+}
+
+.flashcard {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.flashcard.flipped { transform: rotateY(180deg); }
+
+.flashcard-face {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  backface-visibility: hidden;
+  box-shadow: var(--shadow);
+  padding: 20px;
+}
+
+.flashcard-front {
+  background: linear-gradient(135deg, var(--blue), var(--purple));
+  color: white;
+}
+
+.flashcard-back {
+  background: linear-gradient(135deg, var(--green), var(--teal));
+  color: white;
+  transform: rotateY(180deg);
+}
+
+.flashcard-emoji { font-size: 3rem; margin-bottom: 8px; }
+.flashcard-word { font-size: 1.5rem; font-weight: 900; }
+.flashcard-hint { font-size: 0.8rem; opacity: 0.8; margin-top: 4px; }
+.flashcard-meaning { font-size: 1.1rem; font-weight: 700; text-align: center; line-height: 1.4; }
+
+.flashcard-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.fc-nav-btn {
+  background: var(--blue);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: transform 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fc-nav-btn:hover { transform: scale(1.1); }
+.fc-counter { font-size: 1rem; font-weight: 700; color: var(--dark); }
+
+/* ===== QUIZ ===== */
+.quiz-header {
+  text-align: center;
+  padding: 12px;
+}
+
+.quiz-q-num {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.quiz-progress {
+  background: #eee;
+  border-radius: 10px;
+  height: 8px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.quiz-progress-fill {
+  background: linear-gradient(90deg, var(--green), var(--teal));
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.4s ease;
+}
+
+.quiz-question {
+  background: white;
+  border-radius: var(--radius);
+  padding: 20px;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--dark);
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.quiz-emoji { font-size: 3rem; display: block; margin-bottom: 8px; }
+
+.quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+.quiz-opt {
+  background: white;
+  border: 3px solid #e8e8f0;
+  border-radius: var(--radius);
+  padding: 14px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+  color: var(--dark);
+}
+
+.quiz-opt:hover { border-color: var(--blue); background: #f0f4ff; transform: scale(1.02); }
+.quiz-opt.correct { background: #d4edda; border-color: var(--green); color: var(--green); }
+.quiz-opt.wrong { background: #fde8e8; border-color: var(--red); color: var(--red); }
+.quiz-opt:disabled { cursor: not-allowed; }
+
+.quiz-feedback {
+  text-align: center;
+  padding: 16px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  border-radius: var(--radius);
+  margin-top: 12px;
+  animation: bounceIn 0.3s ease;
+}
+
+@keyframes bounceIn {
+  from { transform: scale(0.5); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.feedback-correct { background: #d4edda; color: #155724; }
+.feedback-wrong { background: #fde8e8; color: #721c24; }
+
+/* Score Screen */
+.score-screen {
+  text-align: center;
+  padding: 30px 20px;
+}
+
+.score-emoji { font-size: 5rem; display: block; margin-bottom: 16px; animation: bounce 1s ease infinite; }
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
+.score-num {
+  font-size: 3rem;
+  font-weight: 900;
+  color: var(--purple);
+}
+
+.score-msg {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--dark);
+  margin: 8px 0 20px;
+}
+
+.score-stars { font-size: 2rem; margin-bottom: 16px; }
+
+/* ===== LANGUAGE GAME ===== */
+.game-container {
+  background: white;
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+
+.game-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--dark);
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+/* Word Match Game */
+.match-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.match-col { display: flex; flex-direction: column; gap: 8px; }
+
+.match-item {
+  background: #f0f4ff;
+  border: 3px solid #dde;
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s;
+  color: var(--dark);
+}
+
+.match-item:hover { border-color: var(--blue); background: #e8f0ff; }
+.match-item.selected { border-color: var(--blue); background: var(--blue); color: white; }
+.match-item.matched { border-color: var(--green); background: #d4edda; color: var(--green); cursor: default; }
+.match-item.wrong-match { border-color: var(--red); background: #fde8e8; animation: shake 0.3s ease; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+/* Sentence Builder */
+.sentence-display {
+  background: #f8f0ff;
+  border-radius: 12px;
+  padding: 16px;
+  min-height: 60px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.word-slot {
+  background: white;
+  border: 2px dashed var(--purple);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--purple);
+  cursor: pointer;
+}
+
+.word-bank {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px;
+  background: #fff8f0;
+  border-radius: 12px;
+}
+
+.word-chip {
+  background: linear-gradient(135deg, var(--orange), var(--red));
+  color: white;
+  border-radius: 20px;
+  padding: 8px 14px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s;
+  border: none;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+}
+
+.word-chip:hover { transform: scale(1.05); }
+.word-chip.used { opacity: 0.4; cursor: not-allowed; }
+
+/* ===== PROGRESS / DASHBOARD ===== */
+#progress-screen { background: #f0fff4; padding: 16px; }
+
+.progress-hero {
+  background: linear-gradient(135deg, var(--green), var(--teal));
+  border-radius: var(--radius);
+  padding: 24px;
+  text-align: center;
+  color: white;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+}
+
+.progress-hero .total-stars {
+  font-size: 2.5rem;
+  font-weight: 900;
+  display: block;
+}
+
+.progress-hero .stars-label {
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+.badge-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.badge-item {
+  background: white;
+  border-radius: var(--radius);
+  padding: 16px 8px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  opacity: 0.5;
+  transition: opacity 0.3s;
+}
+
+.badge-item.earned { opacity: 1; }
+.badge-item .badge-icon { font-size: 2rem; }
+.badge-item .badge-name { font-size: 0.7rem; font-weight: 700; color: var(--dark); margin-top: 4px; }
+
+.chapter-progress-list { display: flex; flex-direction: column; gap: 10px; }
+
+.ch-prog-item {
+  background: white;
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+}
+
+.ch-prog-icon { font-size: 1.5rem; }
+.ch-prog-name { flex: 1; font-size: 0.9rem; font-weight: 700; color: var(--dark); }
+.ch-prog-stars { color: var(--yellow); font-size: 0.9rem; }
+
+/* ===== CELEBRATION ===== */
+.celebration {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  animation: confettiFall linear forwards;
+}
+
+@keyframes confettiFall {
+  from { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+  to { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+/* ===== BUTTONS ===== */
+.btn {
+  border: none;
+  border-radius: 50px;
+  padding: 14px 28px;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.2); }
+.btn:active { transform: scale(0.98); }
+
+.btn-primary { background: linear-gradient(135deg, var(--blue), var(--purple)); color: white; }
+.btn-success { background: linear-gradient(135deg, var(--green), var(--teal)); color: white; }
+.btn-warning { background: linear-gradient(135deg, var(--yellow), var(--orange)); color: var(--dark); }
+.btn-danger { background: linear-gradient(135deg, var(--red), var(--pink)); color: white; }
+.btn-full { width: 100%; justify-content: center; }
+
+/* ===== BOOKMARKS SCREEN ===== */
+#bookmarks-screen { padding: 16px; background: #fff8f0; }
+.bookmark-empty { text-align: center; padding: 40px; font-size: 1.1rem; color: #999; }
+.bookmark-item {
+  background: white;
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.bookmark-item:hover { transform: translateX(4px); }
+
+/* ===== SEARCH ===== */
+.search-bar {
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 30px;
+  padding: 10px 16px;
+  margin: 12px 16px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  gap: 8px;
+}
+
+.search-bar input {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 0.95rem;
+  font-family: var(--font-main);
+  color: var(--dark);
+}
+
+/* ===== READING HIGHLIGHT ACTIVITY ===== */
+.reading-activity p {
+  font-size: 1.05rem;
+  line-height: 2;
+  color: var(--dark);
+}
+
+.reading-word {
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: background 0.2s;
+  display: inline-block;
+}
+
+.reading-word:hover { background: #FFD93D40; }
+.reading-word.correct-pick { background: var(--green); color: white; border-radius: 4px; animation: wordGlow 0.5s ease; }
+.reading-word.wrong-pick { background: var(--red); color: white; border-radius: 4px; }
+
+@keyframes wordGlow {
+  from { transform: scale(1.2); }
+  to { transform: scale(1); }
+}
+
+/* ===== SPELLING GAME ===== */
+.letter-tiles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin: 12px 0;
+}
+
+.letter-tile {
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, var(--teal), var(--blue));
+  color: white;
+  border-radius: 10px;
+  font-size: 1.3rem;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  transition: transform 0.15s;
+  border: none;
+}
+
+.letter-tile:hover { transform: translateY(-3px); }
+.letter-tile.used { opacity: 0.3; cursor: not-allowed; }
+
+.spelling-answer {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  min-height: 52px;
+  align-items: center;
+  background: #f8f0ff;
+  border-radius: 12px;
+  padding: 8px;
+  margin: 12px 0;
+  flex-wrap: wrap;
+}
+
+.ans-tile {
+  width: 40px;
+  height: 40px;
+  background: white;
+  border: 3px solid var(--purple);
+  border-radius: 8px;
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: var(--purple);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* ===== MODAL ===== */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-overlay.active { display: flex; }
+
+.modal {
+  background: white;
+  border-radius: var(--radius);
+  padding: 24px;
+  max-width: 340px;
+  width: 100%;
+  text-align: center;
+  animation: bounceIn 0.3s ease;
+}
+
+.modal h3 { font-size: 1.4rem; margin-bottom: 12px; color: var(--dark); }
+.modal p { color: #666; margin-bottom: 20px; }
+
+/* ===== WRITING PRACTICE ===== */
+.writing-prompt {
+  background: linear-gradient(135deg, #fff8f0, #ffeedd);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.writing-prompt .wp-title { font-size: 1.1rem; font-weight: 800; color: var(--orange); margin-bottom: 8px; }
+.writing-prompt .wp-hint { font-size: 0.9rem; color: #666; }
+
+.lined-paper {
+  background: white;
+  border-radius: var(--radius);
+  padding: 16px;
+  background-image: repeating-linear-gradient(transparent, transparent 31px, #e8e8f0 31px, #e8e8f0 32px);
+  min-height: 160px;
+  box-shadow: var(--shadow);
+}
+
+.lined-paper textarea {
+  width: 100%;
+  min-height: 140px;
+  border: none;
+  outline: none;
+  font-size: 1.05rem;
+  line-height: 2;
+  font-family: var(--font-main);
+  background: transparent;
+  resize: none;
+  color: var(--dark);
+}
+
+/* ===== ALPHABET SECTION ===== */
+.alphabet-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  padding: 8px;
+}
+
+.alpha-card {
+  background: white;
+  border-radius: 12px;
+  padding: 8px 4px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.alpha-card:hover { transform: scale(1.1); }
+.alpha-upper { font-size: 1.4rem; font-weight: 900; color: var(--purple); }
+.alpha-lower { font-size: 0.9rem; font-weight: 700; color: var(--blue); }
+.alpha-word { font-size: 0.6rem; color: #888; margin-top: 2px; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 360px) {
+  .nav-grid { grid-template-columns: 1fr 1fr; }
+  .chapter-grid { grid-template-columns: 1fr 1fr; }
+  .quiz-options { grid-template-columns: 1fr 1fr; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
+
+/* Install Banner */
+.install-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(135deg, var(--blue), var(--purple));
+  color: white;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 500;
+  animation: slideUp 0.5s ease;
+  display: none;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.install-banner.show { display: flex; }
+
+.install-banner-text { flex: 1; font-size: 0.85rem; font-weight: 700; }
+
+.install-btn {
+  background: white;
+  color: var(--blue);
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-weight: 800;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.dismiss-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 4px;
+}
+</style>
+</head>
+<body>
+
+<!-- ===========================
+     TITLE SCREEN
+=========================== -->
+<div id="title-screen" class="screen active">
+  <!-- Floating decorative elements -->
+  <div class="float-elem" style="top:5%;left:5%;animation-duration:4s">📚</div>
+  <div class="float-elem" style="top:8%;right:8%;animation-duration:5s;animation-delay:0.5s">✏️</div>
+  <div class="float-elem" style="top:15%;left:15%;animation-duration:3.5s;animation-delay:1s">🌟</div>
+  <div class="float-elem" style="top:20%;right:5%;animation-duration:4.5s;animation-delay:0.3s">🎈</div>
+  <div class="float-elem" style="bottom:20%;left:8%;animation-duration:3s;animation-delay:0.8s">🎀</div>
+  <div class="float-elem" style="bottom:25%;right:10%;animation-duration:4s;animation-delay:1.2s">📝</div>
+  <div class="float-elem" style="top:40%;left:2%;animation-duration:5s;animation-delay:0.6s">🦋</div>
+  <div class="float-elem" style="top:50%;right:3%;animation-duration:3.8s;animation-delay:0.2s">🌈</div>
+
+  <!-- Alphabet floating -->
+  <div style="position:absolute;top:3%;left:50%;transform:translateX(-50%);display:flex;gap:6px;opacity:0.5">
+    <span style="color:white;font-size:1.2rem;font-weight:900;animation:twinkle 2s ease infinite">A</span>
+    <span style="color:#FFD93D;font-size:1.2rem;font-weight:900;animation:twinkle 2s ease infinite;animation-delay:0.2s">B</span>
+    <span style="color:white;font-size:1.2rem;font-weight:900;animation:twinkle 2s ease infinite;animation-delay:0.4s">C</span>
+    <span style="color:#FFD93D;font-size:1.2rem;font-weight:900;animation:twinkle 2s ease infinite;animation-delay:0.6s">D</span>
+    <span style="color:white;font-size:1.2rem;font-weight:900;animation:twinkle 2s ease infinite;animation-delay:0.8s">E</span>
+  </div>
+
+  <div class="title-badge">📖 JKBOSE Class 2</div>
+  <h1 class="title-main">Class 2 English<br>Learning App</h1>
+  <p class="title-sub">Fun • Interactive • Offline</p>
+
+  <!-- Author Photo -->
+  <div class="author-photo-wrap">
+    <div class="author-photo-glow"></div>
+    <div class="author-photo-inner">
+      <img src="author.jpg" alt="Mateen Yousuf" onerror="this.style.display='none';this.parentElement.innerHTML='<div style=\'width:100%;height:100%;background:linear-gradient(135deg,#4361EE,#9B5DE5);display:flex;align-items:center;justify-content:center;font-size:3rem\'>👨‍🏫</div>'">
+    </div>
+  </div>
+
+  <div class="author-name">Mateen Yousuf</div>
+  <div class="author-title">Teacher<br>School Education Department<br>Jammu and Kashmir</div>
+
+  <div class="star-row">
+    <span class="star-item">⭐</span>
+    <span class="star-item">⭐</span>
+    <span class="star-item">⭐</span>
+  </div>
+
+  <button class="start-btn" onclick="showScreen('home-screen')">
+    🚀 Start Learning!
+  </button>
+</div>
+
+<!-- ===========================
+     HOME SCREEN
+=========================== -->
+<div id="home-screen" class="screen">
+  <div class="home-header">
+    <div class="home-greet">👋 Welcome back, Student!</div>
+    <div class="home-title">📚 Class 2 English</div>
+    <div class="home-progress-bar-wrap">
+      <div class="home-progress-bar" id="overall-progress-bar" style="width:0%"></div>
+    </div>
+    <div class="home-progress-text" id="overall-progress-text">0% Complete</div>
+  </div>
+
+  <div class="section-title">🎯 Quick Access</div>
+  <div class="nav-grid">
+    <button class="nav-card" style="background:linear-gradient(135deg,#4361EE,#9B5DE5)" onclick="showScreen('chapters-screen')">
+      <span class="icon">📖</span>
+      <span class="label">Chapters</span>
+      <span class="sub">All 12 lessons</span>
+    </button>
+    <button class="nav-card" style="background:linear-gradient(135deg,#FF6B35,#FF4757)" onclick="showAlphabet()">
+      <span class="icon">🔤</span>
+      <span class="label">Alphabet</span>
+      <span class="sub">A to Z revision</span>
+    </button>
+    <button class="nav-card" style="background:linear-gradient(135deg,#6BCB77,#4DAA57)" onclick="showScreen('progress-screen')">
+      <span class="icon">🏆</span>
+      <span class="label">My Progress</span>
+      <span class="sub">Stars & badges</span>
+    </button>
+    <button class="nav-card" style="background:linear-gradient(135deg,#FFD93D,#FF9F1C)" onclick="showScreen('bookmarks-screen')">
+      <span class="icon">🔖</span>
+      <span class="label">Bookmarks</span>
+      <span class="sub">Saved lessons</span>
+    </button>
+  </div>
+
+  <div class="section-title">📊 Recent Chapters</div>
+  <div id="recent-chapters" style="padding:0 16px 24px"></div>
+</div>
+
+<!-- ===========================
+     CHAPTERS SCREEN
+=========================== -->
+<div id="chapters-screen" class="screen">
+  <div class="top-bar">
+    <button class="back-btn" onclick="showScreen('home-screen')">←</button>
+    <div class="top-bar-title">📚 All Chapters</div>
+    <div class="top-bar-stars">⭐ <span id="total-stars-bar">0</span></div>
+  </div>
+
+  <div class="search-bar">
+    <span>🔍</span>
+    <input type="text" placeholder="Search chapters..." id="chapter-search" oninput="filterChapters(this.value)">
+  </div>
+
+  <div class="chapter-grid" id="chapter-grid"></div>
+</div>
+
+<!-- ===========================
+     CHAPTER DETAIL SCREEN
+=========================== -->
+<div id="chapter-screen" class="screen">
+  <div class="top-bar">
+    <button class="back-btn" onclick="showScreen('chapters-screen')">←</button>
+    <div class="top-bar-title" id="chapter-screen-title">Chapter</div>
+    <button style="background:none;border:none;color:white;font-size:1.3rem;cursor:pointer" onclick="toggleBookmark()" id="bookmark-btn">🔖</button>
+  </div>
+
+  <div class="tabs-row" id="tabs-row">
+    <button class="tab-btn active" onclick="showTab('story')" data-tab="story">📖 Story</button>
+    <button class="tab-btn" onclick="showTab('vocab')" data-tab="vocab">🔤 Vocab</button>
+    <button class="tab-btn" onclick="showTab('grammar')" data-tab="grammar">📝 Grammar</button>
+    <button class="tab-btn" onclick="showTab('game')" data-tab="game">🎮 Game</button>
+    <button class="tab-btn" onclick="showTab('quiz')" data-tab="quiz">❓ Quiz</button>
+    <button class="tab-btn" onclick="showTab('writing')" data-tab="writing">✍️ Write</button>
+  </div>
+
+  <div id="tab-story" class="tab-content active"></div>
+  <div id="tab-vocab" class="tab-content"></div>
+  <div id="tab-grammar" class="tab-content"></div>
+  <div id="tab-game" class="tab-content"></div>
+  <div id="tab-quiz" class="tab-content"></div>
+  <div id="tab-writing" class="tab-content"></div>
+</div>
+
+<!-- ===========================
+     ALPHABET SCREEN
+=========================== -->
+<div id="alphabet-screen" class="screen">
+  <div class="top-bar">
+    <button class="back-btn" onclick="showScreen('home-screen')">←</button>
+    <div class="top-bar-title">🔤 Alphabet Revision</div>
+  </div>
+  <div style="padding:12px 16px;font-size:0.9rem;color:#666;text-align:center">Tap a letter to see a word!</div>
+  <div class="alphabet-grid" id="alphabet-grid"></div>
+</div>
+
+<!-- ===========================
+     PROGRESS SCREEN
+=========================== -->
+<div id="progress-screen" class="screen">
+  <div class="top-bar">
+    <button class="back-btn" onclick="showScreen('home-screen')">←</button>
+    <div class="top-bar-title">🏆 My Progress</div>
+  </div>
+
+  <div style="padding:16px">
+    <div class="progress-hero">
+      <span class="total-stars" id="total-stars-display">0 ⭐</span>
+      <span class="stars-label">Total Stars Earned</span>
+    </div>
+
+    <div class="section-title" style="padding:0 0 12px">🥇 Badges</div>
+    <div class="badge-grid" id="badge-grid"></div>
+
+    <div class="section-title" style="padding:0 0 12px">📖 Chapter Progress</div>
+    <div class="chapter-progress-list" id="chapter-progress-list"></div>
+
+    <div style="margin-top:24px;text-align:center">
+      <button class="btn btn-danger" onclick="confirmReset()">🔄 Reset All Progress</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===========================
+     BOOKMARKS SCREEN
+=========================== -->
+<div id="bookmarks-screen" class="screen">
+  <div class="top-bar">
+    <button class="back-btn" onclick="showScreen('home-screen')">←</button>
+    <div class="top-bar-title">🔖 Bookmarks</div>
+  </div>
+  <div id="bookmarks-list" style="padding:16px"></div>
+</div>
+
+<!-- ===========================
+     MODAL
+=========================== -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<!-- Celebration layer -->
+<div class="celebration" id="celebration"></div>
+
+<!-- Install Banner -->
+<div class="install-banner" id="install-banner">
+  <span class="install-banner-text">📲 Install this app on your device!</span>
+  <button class="install-btn" id="install-btn">Install</button>
+  <button class="dismiss-btn" onclick="document.getElementById('install-banner').classList.remove('show')">✕</button>
+</div>
+
+<script>
+// ============================================================
+// DATA: JKBOSE CLASS 2 ENGLISH CURRICULUM
+// ============================================================
+const CHAPTERS = [
+  {
+    id: 1,
+    icon: "🐠",
+    name: "A Happy Fish",
+    color: "#4361EE",
+    story: {
+      title: "A Happy Fish",
+      text: `Once there was a <span class="highlight" onclick="showWord('fish','A fish lives in water')">fish</span> named Fin.
+Fin lived in a big blue <span class="highlight" onclick="showWord('pond','A pond is a small lake')">pond</span>.
+Every morning, Fin would <span class="highlight" onclick="showWord('swim','To move through water')">swim</span> and play.
+Fin had many <span class="highlight" onclick="showWord('friends','People or animals you like')">friends</span> in the pond.
+They were all very <span class="highlight" onclick="showWord('happy','Feeling very good and joyful')">happy</span> together.
+One day, a <span class="highlight" onclick="showWord('bird','An animal that can fly')">bird</span> came to the pond.
+The bird said, "I am <span class="highlight" onclick="showWord('thirsty','Needing water to drink')">thirsty</span>."
+Fin said, "Please drink from our clean pond!"
+The bird drank and said, "<span class="highlight" onclick="showWord('thank','To show you are grateful')">Thank</span> you, Fin!"
+And they all became good friends.`
+    },
+    vocab: [
+      { word: "Fish", emoji: "🐠", meaning: "An animal that lives and swims in water" },
+      { word: "Pond", emoji: "🏊", meaning: "A small area of still water" },
+      { word: "Swim", emoji: "🏄", meaning: "To move through water using the body" },
+      { word: "Happy", emoji: "😊", meaning: "Feeling very good and joyful" },
+      { word: "Friend", emoji: "🤝", meaning: "Someone you like and enjoy being with" }
+    ],
+    grammar: {
+      title: "Nouns – Names of Things",
+      explanation: "A <b>noun</b> is the name of a person, place, animal, or thing.<br><br>Examples from our story:<br>• <b>Fish</b> – name of an animal 🐠<br>• <b>Pond</b> – name of a place 💧<br>• <b>Bird</b> – name of an animal 🐦<br><br>Rule: Every noun names something we can see, touch, or feel.",
+      examples: ["fish", "pond", "bird", "water", "friend"]
+    },
+    game: {
+      type: "match",
+      title: "🎯 Match the Word to the Picture!",
+      pairs: [
+        { word: "Fish", emoji: "🐠" },
+        { word: "Pond", emoji: "🏊" },
+        { word: "Bird", emoji: "🐦" },
+        { word: "Tree", emoji: "🌳" },
+        { word: "Water", emoji: "💧" }
+      ]
+    },
+    quiz: [
+      { q: "Where did Fin the fish live?", opts: ["In a tree 🌳", "In a pond 🏊", "In a house 🏠", "In a river 🌊"], ans: 1, emoji: "🐠" },
+      { q: "What is Fin's friend?", opts: ["A Dog 🐕", "A Cat 🐱", "A Bird 🐦", "A Lion 🦁"], ans: 2, emoji: "🤝" },
+      { q: "Why did the bird come to the pond?", opts: ["To swim", "To play", "Because it was thirsty 💧", "To catch fish"], ans: 2, emoji: "🐦" },
+      { q: "Which word is a NOUN?", opts: ["Run", "Happy", "Fish 🐠", "Big"], ans: 2, emoji: "📝" },
+      { q: "What did Fin say to the bird?", opts: ["Go away!", "Please drink water 💧", "I am hungry", "Hello friend"], ans: 1, emoji: "💬" }
+    ],
+    writing: { prompt: "Write 2 sentences about a fish.", hint: "Where does a fish live? What does it do?" }
+  },
+  {
+    id: 2,
+    icon: "🌳",
+    name: "The Big Tree",
+    color: "#6BCB77",
+    story: {
+      title: "The Big Tree",
+      text: `There was a very big <span class="highlight" onclick="showWord('tree','A large plant with a trunk')">tree</span> in our village.
+The tree gave us <span class="highlight" onclick="showWord('shade','A cool dark area under a tree')">shade</span> in summer.
+Many <span class="highlight" onclick="showWord('birds','Animals that can fly')">birds</span> built their <span class="highlight" onclick="showWord('nests','Homes made by birds')">nests</span> in its branches.
+Children played under the <span class="highlight" onclick="showWord('tree','A large plant with a trunk')">tree</span> every day.
+One day a man wanted to <span class="highlight" onclick="showWord('cut','To remove with a tool')">cut</span> the tree.
+All the birds cried, "Please do not cut our tree!"
+The children said, "This tree is our <span class="highlight" onclick="showWord('home','Where we live')">home</span>!"
+The man felt sad and put down his <span class="highlight" onclick="showWord('axe','A tool for cutting wood')">axe</span>.
+He said, "I will <span class="highlight" onclick="showWord('plant','To put a seed in soil')">plant</span> more trees instead!"
+Everyone was very happy.`
+    },
+    vocab: [
+      { word: "Tree", emoji: "🌳", meaning: "A tall plant with a trunk and branches" },
+      { word: "Shade", emoji: "☂️", meaning: "A cool area protected from the sun" },
+      { word: "Nest", emoji: "🪹", meaning: "A home built by a bird" },
+      { word: "Axe", emoji: "🪓", meaning: "A sharp tool used to cut wood" },
+      { word: "Plant", emoji: "🌱", meaning: "To put a seed in the ground to grow" }
+    ],
+    grammar: {
+      title: "Verbs – Action Words",
+      explanation: "A <b>verb</b> is an action word. It tells us what someone or something <b>does</b>.<br><br>Examples from our story:<br>• <b>Played</b> – action of playing 🎮<br>• <b>Cried</b> – action of crying 😢<br>• <b>Cut</b> – action of cutting ✂️<br>• <b>Plant</b> – action of planting 🌱<br><br>Remember: If you can say 'I can ___', it's a verb!",
+      examples: ["play", "run", "cut", "plant", "fly", "sit"]
+    },
+    game: {
+      type: "sentence",
+      title: "🧩 Build the Sentence!",
+      sentences: [
+        { words: ["The", "big", "tree", "gives", "shade"], answer: "The big tree gives shade" },
+        { words: ["Birds", "live", "in", "the", "tree"], answer: "Birds live in the tree" },
+        { words: ["Children", "play", "every", "day"], answer: "Children play every day" }
+      ]
+    },
+    quiz: [
+      { q: "What did the tree give in summer?", opts: ["Rain 🌧️", "Shade ☂️", "Food 🍎", "Light 💡"], ans: 1, emoji: "🌳" },
+      { q: "Who built nests in the tree?", opts: ["Children 👶", "Dogs 🐕", "Birds 🐦", "Cats 🐱"], ans: 2, emoji: "🪹" },
+      { q: "Which word is a VERB?", opts: ["Tree", "Happy", "Bird", "Plant 🌱"], ans: 3, emoji: "📝" },
+      { q: "What did the man put down?", opts: ["A hammer", "An axe 🪓", "A knife", "A saw"], ans: 1, emoji: "❓" },
+      { q: "What did the man decide to do?", opts: ["Cut the tree", "Plant more trees 🌱", "Go away", "Build a house"], ans: 1, emoji: "💡" }
+    ],
+    writing: { prompt: "Why should we save trees?", hint: "Think about what trees give us." }
+  },
+  {
+    id: 3,
+    icon: "🌧️",
+    name: "Rain Rain Go Away",
+    color: "#4D96FF",
+    story: {
+      title: "Rain, Rain, Go Away!",
+      text: `The <span class="highlight" onclick="showWord('rain','Water that falls from clouds')">rain</span> was falling all day long.
+Aman wanted to go out and <span class="highlight" onclick="showWord('play','To have fun outside')">play</span>.
+But the <span class="highlight" onclick="showWord('sky','The blue space above us')">sky</span> was dark and cloudy.
+His mother said, "Stay inside, Aman. The <span class="highlight" onclick="showWord('rain','Water that falls from clouds')">rain</span> will stop soon."
+Aman looked out of the <span class="highlight" onclick="showWord('window','An opening in a wall with glass')">window</span>.
+He saw little <span class="highlight" onclick="showWord('drops','Small amounts of water')">drops</span> on the glass.
+He started to <span class="highlight" onclick="showWord('draw','To make pictures')">draw</span> pictures on the foggy window!
+Soon the sun came out. A beautiful <span class="highlight" onclick="showWord('rainbow','Colourful arc in the sky after rain')">rainbow</span> appeared.
+"Look! A rainbow!" cried Aman with joy.
+Rain gives water to plants and fills our rivers.`
+    },
+    vocab: [
+      { word: "Rain", emoji: "🌧️", meaning: "Water that falls from clouds in the sky" },
+      { word: "Cloud", emoji: "☁️", meaning: "A mass of water vapor floating in the sky" },
+      { word: "Rainbow", emoji: "🌈", meaning: "A colorful arc seen in the sky after rain" },
+      { word: "Window", emoji: "🪟", meaning: "An opening in a wall with glass in it" },
+      { word: "Draw", emoji: "✏️", meaning: "To make pictures with a pencil or pen" }
+    ],
+    grammar: {
+      title: "Pronouns – He, She, It, They",
+      explanation: "A <b>pronoun</b> is used instead of a noun so we don't repeat the same name.<br><br>Examples:<br>• <b>Aman</b> looked out → <b>He</b> looked out 👦<br>• <b>Mother</b> said → <b>She</b> said 👩<br>• <b>The rain</b> fell → <b>It</b> fell 🌧️<br>• <b>The drops</b> appeared → <b>They</b> appeared 💧<br><br>Common pronouns: I, You, He, She, It, We, They",
+      examples: ["He", "She", "It", "They", "We", "I", "You"]
+    },
+    game: {
+      type: "spelling",
+      title: "🔤 Spell the Word!",
+      words: [
+        { word: "RAIN", emoji: "🌧️", hint: "Water from the sky" },
+        { word: "CLOUD", emoji: "☁️", hint: "Fluffy thing in the sky" },
+        { word: "SUN", emoji: "☀️", hint: "Gives us light and warmth" },
+        { word: "WIND", emoji: "💨", hint: "Moving air" }
+      ]
+    },
+    quiz: [
+      { q: "Who wanted to go out and play?", opts: ["Mother 👩", "Aman 👦", "A friend", "The teacher"], ans: 1, emoji: "❓" },
+      { q: "What did Aman see after the rain?", opts: ["Stars ⭐", "Rainbow 🌈", "Snow ❄️", "Moon 🌙"], ans: 1, emoji: "🌈" },
+      { q: "What is the pronoun for 'Aman'?", opts: ["She", "He 👦", "It", "They"], ans: 1, emoji: "📝" },
+      { q: "What did Aman draw on?", opts: ["Paper 📄", "Floor", "Window 🪟", "Wall"], ans: 2, emoji: "✏️" },
+      { q: "Rain is good because it:", opts: ["Makes noise", "Gives water to plants 🌿", "Makes us cold", "Is bad"], ans: 1, emoji: "🌧️" }
+    ],
+    writing: { prompt: "What do you like to do on a rainy day?", hint: "Think about games indoors, drawing, reading..." }
+  },
+  {
+    id: 4,
+    icon: "🐄",
+    name: "Our Pet Animals",
+    color: "#FF6B35",
+    story: {
+      title: "Our Pet Animals",
+      text: `We have many <span class="highlight" onclick="showWord('animals','Living creatures that are not plants')">animals</span> at home and on the farm.
+A <span class="highlight" onclick="showWord('cow','A large farm animal that gives milk')">cow</span> gives us <span class="highlight" onclick="showWord('milk','White liquid that cows give')">milk</span>.
+A <span class="highlight" onclick="showWord('dog','A pet animal that barks')">dog</span> guards our house. It barks loudly.
+A <span class="highlight" onclick="showWord('cat','A small soft pet animal')">cat</span> says "meow" and catches mice.
+A <span class="highlight" onclick="showWord('hen','A female chicken')">hen</span> lays <span class="highlight" onclick="showWord('eggs','Oval shells that contain baby animals')">eggs</span> for us.
+A <span class="highlight" onclick="showWord('horse','A large animal used for riding')">horse</span> can run very fast.
+We must be kind to all <span class="highlight" onclick="showWord('animals','Living creatures')">animals</span>.
+Give them clean water and good <span class="highlight" onclick="showWord('food','Things animals eat to live')">food</span>.
+Animals are our <span class="highlight" onclick="showWord('friends','Beings that help us')">friends</span>. We should love them.`
+    },
+    vocab: [
+      { word: "Cow", emoji: "🐄", meaning: "A large farm animal that gives us milk" },
+      { word: "Dog", emoji: "🐕", meaning: "A friendly pet that barks and guards homes" },
+      { word: "Hen", emoji: "🐓", meaning: "A female chicken that lays eggs" },
+      { word: "Horse", emoji: "🐴", meaning: "A large strong animal used for riding" },
+      { word: "Cat", emoji: "🐱", meaning: "A small furry pet that says meow" }
+    ],
+    grammar: {
+      title: "Singular and Plural",
+      explanation: "When there is <b>one</b> of something, it is <b>singular</b>.<br>When there are <b>more than one</b>, it is <b>plural</b>.<br><br>We usually add <b>-s</b> or <b>-es</b> to make plural:<br>• cow → <b>cows</b> 🐄🐄<br>• egg → <b>eggs</b> 🥚🥚<br>• dog → <b>dogs</b> 🐕🐕<br>• fox → <b>foxes</b> 🦊🦊<br><br>Special cases:<br>• child → <b>children</b><br>• mouse → <b>mice</b>",
+      examples: ["cow→cows", "dog→dogs", "cat→cats", "hen→hens", "horse→horses"]
+    },
+    game: {
+      type: "match",
+      title: "🎯 Match Animal to What It Gives!",
+      pairs: [
+        { word: "Cow 🐄", emoji: "Milk 🥛" },
+        { word: "Hen 🐓", emoji: "Eggs 🥚" },
+        { word: "Dog 🐕", emoji: "Guard 🛡️" },
+        { word: "Horse 🐴", emoji: "Ride 🤠" },
+        { word: "Cat 🐱", emoji: "Meow 😺" }
+      ]
+    },
+    quiz: [
+      { q: "Which animal gives us milk?", opts: ["Dog 🐕", "Cat 🐱", "Cow 🐄", "Horse 🐴"], ans: 2, emoji: "🥛" },
+      { q: "Which animal lays eggs?", opts: ["Dog 🐕", "Hen 🐓", "Cat 🐱", "Cow 🐄"], ans: 1, emoji: "🥚" },
+      { q: "What is plural of 'dog'?", opts: ["Doges", "Dogis", "Dogs 🐕🐕", "Dogses"], ans: 2, emoji: "📝" },
+      { q: "Which animal guards our house?", opts: ["Cow", "Hen", "Horse", "Dog 🐕"], ans: 3, emoji: "🛡️" },
+      { q: "We should be ___ to animals.", opts: ["Cruel", "Kind 💖", "Afraid", "Angry"], ans: 1, emoji: "❤️" }
+    ],
+    writing: { prompt: "Write about your favorite animal.", hint: "What does it look like? What does it eat? How does it help us?" }
+  },
+  {
+    id: 5,
+    icon: "🍎",
+    name: "Good Habits",
+    color: "#FF4757",
+    story: {
+      title: "Good Habits",
+      text: `Good habits help us stay <span class="highlight" onclick="showWord('healthy','Having a strong and good body')">healthy</span> and happy.
+We should <span class="highlight" onclick="showWord('wake','To stop sleeping and get up')">wake</span> up early every morning.
+<span class="highlight" onclick="showWord('brush','To clean teeth with a toothbrush')">Brush</span> your teeth twice a day — morning and night.
+<span class="highlight" onclick="showWord('wash','To clean with water and soap')">Wash</span> your hands before eating and after playing.
+Eat fresh <span class="highlight" onclick="showWord('fruits','Sweet food that grows on trees')">fruits</span> and vegetables every day.
+Drink plenty of clean <span class="highlight" onclick="showWord('water','Clear liquid we drink')">water</span>.
+Go to <span class="highlight" onclick="showWord('bed','Place where we sleep')">bed</span> on time and get enough <span class="highlight" onclick="showWord('sleep','Rest when we close our eyes')">sleep</span>.
+Do not eat too much <span class="highlight" onclick="showWord('junk','Food that is unhealthy')">junk</span> food.
+<span class="highlight" onclick="showWord('exercise','Physical activity for health')">Exercise</span> every day to keep your body strong.
+Good habits make us good <span class="highlight" onclick="showWord('students','Children who go to school')">students</span> too!`
+    },
+    vocab: [
+      { word: "Healthy", emoji: "💪", meaning: "Having a strong and fit body and mind" },
+      { word: "Brush", emoji: "🪥", meaning: "To clean teeth with a toothbrush" },
+      { word: "Fruits", emoji: "🍎", meaning: "Sweet, juicy food that grows on trees" },
+      { word: "Exercise", emoji: "🏃", meaning: "Physical activity that keeps us fit" },
+      { word: "Sleep", emoji: "😴", meaning: "Rest that our body needs every night" }
+    ],
+    grammar: {
+      title: "Adjectives – Describing Words",
+      explanation: "An <b>adjective</b> describes a noun. It tells us what something is like.<br><br>Examples:<br>• <b>Fresh</b> fruits 🍎<br>• <b>Clean</b> water 💧<br>• <b>Good</b> habits 👍<br>• <b>Strong</b> body 💪<br><br>Adjectives answer questions like:<br>What kind? How many? What color?<br><br>Big, small, red, three, happy, dirty...",
+      examples: ["fresh", "clean", "good", "strong", "healthy", "early"]
+    },
+    game: {
+      type: "spelling",
+      title: "🔤 Spell the Healthy Word!",
+      words: [
+        { word: "WASH", emoji: "🧼", hint: "Clean with soap" },
+        { word: "SLEEP", emoji: "😴", hint: "Rest at night" },
+        { word: "FRUIT", emoji: "🍎", hint: "Apple, mango..." },
+        { word: "WATER", emoji: "💧", hint: "We drink this" }
+      ]
+    },
+    quiz: [
+      { q: "How many times should you brush your teeth?", opts: ["Once", "Twice 2️⃣", "Three times", "Never"], ans: 1, emoji: "🪥" },
+      { q: "We should wash hands to stay:", opts: ["Dirty", "Healthy 💪", "Tired", "Hungry"], ans: 1, emoji: "🧼" },
+      { q: "Which word is an ADJECTIVE?", opts: ["Run", "Tree", "Fresh 🍎", "Eat"], ans: 2, emoji: "📝" },
+      { q: "What should you NOT eat too much?", opts: ["Fruits 🍎", "Vegetables", "Junk food 🍔", "Water"], ans: 2, emoji: "❌" },
+      { q: "What keeps our body strong?", opts: ["Sleeping all day", "Junk food", "Exercise 🏃", "Staying inside"], ans: 2, emoji: "💪" }
+    ],
+    writing: { prompt: "Write about your morning habits.", hint: "What do you do first when you wake up?" }
+  },
+  {
+    id: 6,
+    icon: "🏫",
+    name: "My School",
+    color: "#9B5DE5",
+    story: {
+      title: "My School",
+      text: `I love my <span class="highlight" onclick="showWord('school','A place where children learn')">school</span>.
+My school is big and <span class="highlight" onclick="showWord('beautiful','Very nice to look at')">beautiful</span>.
+There are many <span class="highlight" onclick="showWord('classrooms','Rooms where students study')">classrooms</span> in my school.
+My <span class="highlight" onclick="showWord('teacher','A person who teaches students')">teacher</span>'s name is Mrs. Sharma.
+She is very <span class="highlight" onclick="showWord('kind','Friendly and caring')">kind</span> and helpful.
+I sit with my <span class="highlight" onclick="showWord('friends','People we like and play with')">friends</span> in class.
+We <span class="highlight" onclick="showWord('read','To look at words and understand')">read</span>, write and <span class="highlight" onclick="showWord('learn','To get new knowledge')">learn</span> together.
+Our school has a <span class="highlight" onclick="showWord('library','A room with many books')">library</span> with many books.
+We play in the <span class="highlight" onclick="showWord('playground','An area for outdoor games')">playground</span> during lunch.
+My school makes me a <span class="highlight" onclick="showWord('smart','Intelligent and clever')">smart</span> student!`
+    },
+    vocab: [
+      { word: "School", emoji: "🏫", meaning: "A place where children go to study and learn" },
+      { word: "Teacher", emoji: "👩‍🏫", meaning: "A person who teaches and guides students" },
+      { word: "Library", emoji: "📚", meaning: "A room full of books to read and borrow" },
+      { word: "Classroom", emoji: "🎒", meaning: "A room in school where lessons are taught" },
+      { word: "Playground", emoji: "🛝", meaning: "An outdoor area where children play" }
+    ],
+    grammar: {
+      title: "Capital Letters and Full Stops",
+      explanation: "Every <b>sentence</b> starts with a <b>capital letter</b>.<br>Every sentence ends with a <b>full stop (.)</b><br><br>Names of people and places also start with capital letters — these are called <b>Proper Nouns</b>.<br><br>Examples:<br>• <b>M</b>rs. Sharma is my teacher.<br>• <b>I</b> love my school.<br>• My school is in <b>J</b>ammu.<br>• <b>A</b>man reads every day.",
+      examples: ["India", "Aman", "Kashmir", "Monday", "January"]
+    },
+    game: {
+      type: "sentence",
+      title: "🧩 Build the School Sentence!",
+      sentences: [
+        { words: ["I", "love", "my", "school"], answer: "I love my school" },
+        { words: ["My", "teacher", "is", "very", "kind"], answer: "My teacher is very kind" },
+        { words: ["We", "read", "and", "write", "together"], answer: "We read and write together" }
+      ]
+    },
+    quiz: [
+      { q: "What is a school?", opts: ["A shop", "A hospital", "A place to learn 📚", "A park"], ans: 2, emoji: "🏫" },
+      { q: "Where do children play?", opts: ["Library 📚", "Classroom 🎒", "Playground 🛝", "Kitchen"], ans: 2, emoji: "⚽" },
+      { q: "A sentence must start with a:", opts: ["Small letter", "Number", "Capital letter A", "Full stop"], ans: 2, emoji: "📝" },
+      { q: "A sentence ends with a:", opts: ["Comma", "Full stop . ✓", "Question mark", "Star"], ans: 1, emoji: "📍" },
+      { q: "'Kashmir' starts with capital because it is:", opts: ["A verb", "A proper noun 🗺️", "An adjective", "A pronoun"], ans: 1, emoji: "🌍" }
+    ],
+    writing: { prompt: "Write 3 sentences about your school.", hint: "What is your school's name? Who is your teacher? What do you like most?" }
+  },
+  {
+    id: 7,
+    icon: "🌍",
+    name: "Our Earth",
+    color: "#4D96FF",
+    story: {
+      title: "Our Earth",
+      text: `We live on a beautiful <span class="highlight" onclick="showWord('planet','A large ball that moves around the sun')">planet</span> called Earth.
+Earth has <span class="highlight" onclick="showWord('land','The solid ground we walk on')">land</span> and <span class="highlight" onclick="showWord('water','Oceans and seas on earth')">water</span>.
+Most of Earth is covered with <span class="highlight" onclick="showWord('oceans','Very large areas of salt water')">oceans</span>.
+We live on the <span class="highlight" onclick="showWord('land','The solid ground we walk on')">land</span>.
+Earth has mountains, rivers, and <span class="highlight" onclick="showWord('forests','Large areas with many trees')">forests</span>.
+The <span class="highlight" onclick="showWord('air','The mix of gases we breathe')">air</span> around Earth keeps us alive.
+We must keep our Earth <span class="highlight" onclick="showWord('clean','Free from dirt and pollution')">clean</span>.
+Do not throw <span class="highlight" onclick="showWord('garbage','Waste and rubbish')">garbage</span> on the road.
+<span class="highlight" onclick="showWord('plant','To put seeds in soil')">Plant</span> more trees to make Earth green.
+Let us all protect our <span class="highlight" onclick="showWord('Earth','Our home planet')">Earth</span>!`
+    },
+    vocab: [
+      { word: "Earth", emoji: "🌍", meaning: "The planet we live on" },
+      { word: "Ocean", emoji: "🌊", meaning: "A very large area of sea water on Earth" },
+      { word: "Forest", emoji: "🌲", meaning: "A large area covered with many trees" },
+      { word: "Air", emoji: "💨", meaning: "The invisible gas we breathe to stay alive" },
+      { word: "Mountain", emoji: "⛰️", meaning: "A very high rocky hill on Earth" }
+    ],
+    grammar: {
+      title: "Question Words: What, Who, Where, When, Why",
+      explanation: "We use special words to ask <b>questions</b>:<br><br>• <b>What</b> — asking about a thing 🔍<br>• <b>Who</b> — asking about a person 👤<br>• <b>Where</b> — asking about a place 📍<br>• <b>When</b> — asking about time ⏰<br>• <b>Why</b> — asking about a reason 💡<br><br>Examples:<br>• <b>What</b> is Earth?<br>• <b>Where</b> do we live?<br>• <b>Why</b> should we plant trees?",
+      examples: ["What", "Who", "Where", "When", "Why", "How"]
+    },
+    game: {
+      type: "match",
+      title: "🎯 Match: Question Word to Answer!",
+      pairs: [
+        { word: "What 🔍", emoji: "A planet 🌍" },
+        { word: "Who 👤", emoji: "A teacher 👩‍🏫" },
+        { word: "Where 📍", emoji: "In school 🏫" },
+        { word: "When ⏰", emoji: "In morning 🌅" },
+        { word: "Why 💡", emoji: "To learn 📚" }
+      ]
+    },
+    quiz: [
+      { q: "What planet do we live on?", opts: ["Mars", "Moon", "Earth 🌍", "Jupiter"], ans: 2, emoji: "🌍" },
+      { q: "Most of Earth is covered with:", opts: ["Forests 🌲", "Deserts", "Oceans 🌊", "Mountains"], ans: 2, emoji: "🌊" },
+      { q: "'WHERE' is used to ask about:", opts: ["A person", "A time", "A place 📍", "A reason"], ans: 2, emoji: "📝" },
+      { q: "What keeps us alive on Earth?", opts: ["Gold", "Air 💨", "Money", "Noise"], ans: 1, emoji: "💨" },
+      { q: "We should NOT throw __ on the road.", opts: ["Water", "Seeds", "Garbage 🗑️", "Flowers"], ans: 2, emoji: "🌱" }
+    ],
+    writing: { prompt: "How can you keep our Earth clean?", hint: "Think of 3 ways to help the Earth." }
+  },
+  {
+    id: 8,
+    icon: "👨‍👩‍👧",
+    name: "My Family",
+    color: "#FF6B35",
+    story: {
+      title: "My Family",
+      text: `My <span class="highlight" onclick="showWord('family','A group of people who live together')">family</span> is very dear to me.
+My <span class="highlight" onclick="showWord('father','The male parent in a family')">father</span> goes to work every morning.
+My <span class="highlight" onclick="showWord('mother','The female parent in a family')">mother</span> cooks delicious food for us.
+I have one elder <span class="highlight" onclick="showWord('brother','A male sibling')">brother</span> and one younger <span class="highlight" onclick="showWord('sister','A female sibling')">sister</span>.
+My <span class="highlight" onclick="showWord('grandfather','Father of your mother or father')">grandfather</span> tells us stories at night.
+My <span class="highlight" onclick="showWord('grandmother','Mother of your mother or father')">grandmother</span> makes warm sweaters for us.
+We all sit together and eat dinner.
+On Sundays, we go to the <span class="highlight" onclick="showWord('park','An open green area for enjoyment')">park</span>.
+A family that stays together is always <span class="highlight" onclick="showWord('happy','Full of joy')">happy</span>.
+I love my family very much! ❤️`
+    },
+    vocab: [
+      { word: "Family", emoji: "👨‍👩‍👧", meaning: "A group of people related to each other" },
+      { word: "Father", emoji: "👨", meaning: "Your male parent who takes care of you" },
+      { word: "Mother", emoji: "👩", meaning: "Your female parent who loves and cares for you" },
+      { word: "Brother", emoji: "👦", meaning: "A male child from the same parents" },
+      { word: "Sister", emoji: "👧", meaning: "A female child from the same parents" }
+    ],
+    grammar: {
+      title: "Opposite Words (Antonyms)",
+      explanation: "Words that have <b>opposite</b> meanings are called <b>antonyms</b>.<br><br>Examples:<br>• <b>Big</b> ↔ <b>Small</b> 🔄<br>• <b>Happy</b> ↔ <b>Sad</b> 🔄<br>• <b>Hot</b> ↔ <b>Cold</b> 🔄<br>• <b>Young</b> ↔ <b>Old</b> 🔄<br>• <b>Day</b> ↔ <b>Night</b> 🔄<br><br>Antonyms help us describe things better!",
+      examples: ["big-small", "hot-cold", "day-night", "good-bad", "fast-slow"]
+    },
+    game: {
+      type: "match",
+      title: "🎯 Match the Opposites!",
+      pairs: [
+        { word: "Big 🔺", emoji: "Small 🔻" },
+        { word: "Hot 🔥", emoji: "Cold ❄️" },
+        { word: "Day ☀️", emoji: "Night 🌙" },
+        { word: "Happy 😊", emoji: "Sad 😢" },
+        { word: "Fast 🚀", emoji: "Slow 🐢" }
+      ]
+    },
+    quiz: [
+      { q: "Who tells stories at night?", opts: ["Father", "Mother", "Grandfather 👴", "Sister"], ans: 2, emoji: "📖" },
+      { q: "What is the opposite of 'big'?", opts: ["Huge", "Large", "Small 🔻", "Heavy"], ans: 2, emoji: "📝" },
+      { q: "What is the opposite of 'hot'?", opts: ["Warm", "Cool", "Cold ❄️", "Burn"], ans: 2, emoji: "❄️" },
+      { q: "Where does the family go on Sunday?", opts: ["School", "Work", "Park 🌳", "Library"], ans: 2, emoji: "🌅" },
+      { q: "Who makes sweaters in the family?", opts: ["Father", "Brother", "Grandmother 👵", "Sister"], ans: 2, emoji: "🧶" }
+    ],
+    writing: { prompt: "Write about your family.", hint: "How many members? What does each person do?" }
+  },
+  {
+    id: 9,
+    icon: "🎨",
+    name: "Colours Around Us",
+    color: "#F72585",
+    story: {
+      title: "Colours Around Us",
+      text: `Our world is full of beautiful <span class="highlight" onclick="showWord('colours','What we see that makes things look different')">colours</span>!
+The <span class="highlight" onclick="showWord('sky','Space above us')">sky</span> is <span class="highlight" onclick="showWord('blue','The colour of the sky and sea')">blue</span> during the day.
+Grass and leaves are <span class="highlight" onclick="showWord('green','The colour of plants and leaves')">green</span>.
+The sun is <span class="highlight" onclick="showWord('yellow','A bright warm colour like the sun')">yellow</span> and bright.
+Roses are often <span class="highlight" onclick="showWord('red','A warm colour like fire')">red</span> and beautiful.
+<span class="highlight" onclick="showWord('orange','A warm colour between red and yellow')">Orange</span> is the colour of oranges and mangoes!
+<span class="highlight" onclick="showWord('white','The colour of milk and snow')">White</span> clouds float in the blue sky.
+<span class="highlight" onclick="showWord('black','The darkest colour')">Black</span> is the colour of night and coal.
+A rainbow has seven colours: Violet, Indigo, Blue, Green, Yellow, Orange, Red.
+We remember them as <span class="highlight" onclick="showWord('VIBGYOR','Short form for rainbow colours')">VIBGYOR</span>!`
+    },
+    vocab: [
+      { word: "Red", emoji: "🔴", meaning: "A warm, bright colour like fire and roses" },
+      { word: "Blue", emoji: "🔵", meaning: "The colour of the sky and the sea" },
+      { word: "Green", emoji: "🟢", meaning: "The colour of grass, leaves, and plants" },
+      { word: "Yellow", emoji: "🟡", meaning: "A bright colour like the sun and bananas" },
+      { word: "Orange", emoji: "🟠", meaning: "A warm colour between red and yellow" }
+    ],
+    grammar: {
+      title: "More Adjectives – Colour Words",
+      explanation: "Colour words are special <b>adjectives</b> that describe what colour something is.<br><br>Examples:<br>• A <b>red</b> rose 🌹<br>• A <b>blue</b> sky 🌤️<br>• <b>Green</b> grass 🌿<br>• A <b>yellow</b> sun ☀️<br><br>We can use colour adjectives before nouns:<br>• The <b>blue</b> <u>ball</u><br>• The <b>big red</b> <u>apple</u><br>• My <b>green</b> <u>pencil</u>",
+      examples: ["red rose", "blue sky", "green tree", "yellow sun", "white cloud"]
+    },
+    game: {
+      type: "match",
+      title: "🎯 Match Colour to Object!",
+      pairs: [
+        { word: "Rose 🌹", emoji: "Red 🔴" },
+        { word: "Sky 🌤️", emoji: "Blue 🔵" },
+        { word: "Grass 🌿", emoji: "Green 🟢" },
+        { word: "Sun ☀️", emoji: "Yellow 🟡" },
+        { word: "Coal", emoji: "Black ⚫" }
+      ]
+    },
+    quiz: [
+      { q: "What colour is the sky?", opts: ["Green", "Blue 🔵", "Red", "Yellow"], ans: 1, emoji: "🌤️" },
+      { q: "How many colours are in a rainbow?", opts: ["5", "6", "7 🌈", "8"], ans: 2, emoji: "🌈" },
+      { q: "'Red rose' — what is the adjective?", opts: ["Rose", "Red 🔴✓", "The", "A"], ans: 1, emoji: "📝" },
+      { q: "What colour is grass?", opts: ["Yellow", "Blue", "Green 🟢", "Red"], ans: 2, emoji: "🌿" },
+      { q: "What does VIBGYOR stand for?", opts: ["Types of weather", "Rainbow colours 🌈", "Days of week", "Names of planets"], ans: 1, emoji: "🌈" }
+    ],
+    writing: { prompt: "Write about your favourite colour and 3 things of that colour.", hint: "Example: My favourite colour is blue. The sky is blue. Water is blue..." }
+  },
+  {
+    id: 10,
+    icon: "🍲",
+    name: "Food We Eat",
+    color: "#FF6B35",
+    story: {
+      title: "Food We Eat",
+      text: `Food gives us <span class="highlight" onclick="showWord('energy','Power to do work and play')">energy</span> to work and play.
+We eat many kinds of <span class="highlight" onclick="showWord('food','Things we eat to stay healthy')">food</span> every day.
+<span class="highlight" onclick="showWord('rice','White grain that we cook and eat')">Rice</span> and <span class="highlight" onclick="showWord('bread','Food made from wheat')">bread</span> give us energy.
+<span class="highlight" onclick="showWord('vegetables','Green plants we eat as food')">Vegetables</span> keep our body healthy.
+<span class="highlight" onclick="showWord('milk','White liquid from cows')">Milk</span> makes our bones and teeth strong.
+<span class="highlight" onclick="showWord('fruits','Sweet juicy food from trees')">Fruits</span> give us vitamins.
+We must eat all kinds of food — this is called a <span class="highlight" onclick="showWord('balanced','Having the right amount of everything')">balanced</span> diet.
+Drink eight glasses of <span class="highlight" onclick="showWord('water','Clear liquid we need to live')">water</span> every day.
+Do not eat too much <span class="highlight" onclick="showWord('sweet','Food with a lot of sugar')">sweet</span> or spicy food.
+Eat on time and stay <span class="highlight" onclick="showWord('healthy','Having a strong body')">healthy</span>!`
+    },
+    vocab: [
+      { word: "Rice", emoji: "🍚", meaning: "White grain that is cooked and eaten as a meal" },
+      { word: "Vegetables", emoji: "🥦", meaning: "Green plants we eat to stay healthy" },
+      { word: "Fruits", emoji: "🍇", meaning: "Sweet juicy food that grows on trees" },
+      { word: "Energy", emoji: "⚡", meaning: "The power our body needs to work and play" },
+      { word: "Balanced", emoji: "⚖️", meaning: "Having the right amount of different foods" }
+    ],
+    grammar: {
+      title: "Sentences: Statements and Questions",
+      explanation: "There are different kinds of sentences:<br><br>• A <b>Statement</b> gives information and ends with a <b>full stop (.)</b><br>  👉 We eat rice every day.<br><br>• A <b>Question</b> asks something and ends with a <b>question mark (?)</b><br>  👉 What do you eat for lunch?<br><br>• An <b>Exclamation</b> shows strong feeling and ends with an <b>exclamation mark (!)</b><br>  👉 How delicious this food is!",
+      examples: ["I eat fruits. (statement)", "Do you like rice? (question)", "What yummy food! (exclamation)"]
+    },
+    game: {
+      type: "match",
+      title: "🎯 Match Food to Its Benefit!",
+      pairs: [
+        { word: "Milk 🥛", emoji: "Strong bones 🦴" },
+        { word: "Fruits 🍎", emoji: "Vitamins 💊" },
+        { word: "Rice 🍚", emoji: "Energy ⚡" },
+        { word: "Water 💧", emoji: "Hydration 🏃" },
+        { word: "Veggies 🥦", emoji: "Health 💚" }
+      ]
+    },
+    quiz: [
+      { q: "Which food gives us energy?", opts: ["Candy 🍬", "Rice 🍚", "Ice cream", "Chips"], ans: 1, emoji: "⚡" },
+      { q: "Which food makes bones strong?", opts: ["Chips", "Cold drinks", "Milk 🥛", "Junk food"], ans: 2, emoji: "🦴" },
+      { q: "A sentence ending with '?' is a:", opts: ["Statement", "Exclamation", "Question ❓", "Command"], ans: 2, emoji: "📝" },
+      { q: "How many glasses of water daily?", opts: ["2 glasses", "4 glasses", "6 glasses", "8 glasses 💧"], ans: 3, emoji: "💧" },
+      { q: "Eating all kinds of food is called:", opts: ["Junk diet", "Sweet diet", "Balanced diet ⚖️", "No diet"], ans: 2, emoji: "🍽️" }
+    ],
+    writing: { prompt: "Write about what you eat for breakfast, lunch and dinner.", hint: "What is your favourite meal? Why?" }
+  },
+  {
+    id: 11,
+    icon: "🚦",
+    name: "Road Safety",
+    color: "#FF4757",
+    story: {
+      title: "Road Safety Rules",
+      text: `We must follow <span class="highlight" onclick="showWord('rules','Instructions we must follow')">rules</span> on the road to stay safe.
+Always walk on the <span class="highlight" onclick="showWord('footpath','A path for walking beside the road')">footpath</span>.
+Look both sides — <span class="highlight" onclick="showWord('left','The direction to the left side')">left</span> and <span class="highlight" onclick="showWord('right','The direction to the right side')">right</span> — before crossing.
+Cross only at the <span class="highlight" onclick="showWord('zebra','Black and white lines to cross road')">zebra</span> crossing.
+A <span class="highlight" onclick="showWord('red','The colour red means stop')">red</span> light means <b>STOP</b>! 🛑
+A <span class="highlight" onclick="showWord('green','The colour green means go')">green</span> light means <b>GO</b>! 🟢
+A yellow light means <b>GET READY</b>! 🟡
+Always wear a <span class="highlight" onclick="showWord('helmet','Safety cap for the head')">helmet</span> while cycling.
+Do not play on the <span class="highlight" onclick="showWord('road','Path for vehicles to travel')">road</span>.
+Safe children are <span class="highlight" onclick="showWord('smart','Clever and careful')">smart</span> children!`
+    },
+    vocab: [
+      { word: "Footpath", emoji: "🚶", meaning: "A safe path for walking beside the road" },
+      { word: "Zebra Crossing", emoji: "🦓", meaning: "Black and white lines where people cross safely" },
+      { word: "Helmet", emoji: "⛑️", meaning: "A hard hat to protect your head while cycling" },
+      { word: "Traffic", emoji: "🚦", meaning: "Cars, buses, and bikes moving on the road" },
+      { word: "Signal", emoji: "🚦", meaning: "Red, yellow, green lights that control traffic" }
+    ],
+    grammar: {
+      title: "Commands and Instructions",
+      explanation: "A <b>command</b> or <b>instruction</b> tells someone to do or not do something.<br><br>Commands often start with a verb:<br>• <b>Stop</b> at the red light! 🛑<br>• <b>Look</b> both ways. 👀<br>• <b>Wear</b> your helmet. ⛑️<br>• <b>Do not</b> play on the road. ❌<br><br>Commands can end with a full stop or exclamation mark.",
+      examples: ["Stop!", "Look both ways.", "Wear a helmet.", "Do not run.", "Come here."]
+    },
+    game: {
+      type: "match",
+      title: "🎯 Match Traffic Light to Action!",
+      pairs: [
+        { word: "Red 🔴", emoji: "STOP 🛑" },
+        { word: "Green 🟢", emoji: "GO ✅" },
+        { word: "Yellow 🟡", emoji: "GET READY ⏳" },
+        { word: "Zebra 🦓", emoji: "CROSS HERE 🚶" },
+        { word: "Helmet ⛑️", emoji: "SAFE HEAD 👍" }
+      ]
+    },
+    quiz: [
+      { q: "Red traffic light means:", opts: ["Go 🟢", "Stop 🛑", "Speed up", "Turn left"], ans: 1, emoji: "🚦" },
+      { q: "Where should you walk?", opts: ["On the road", "Footpath 🚶", "In the middle", "On the car"], ans: 1, emoji: "🚶" },
+      { q: "Which is a command sentence?", opts: ["I like roads", "Road is long", "Stop at the signal! 🛑", "The car is red"], ans: 2, emoji: "📝" },
+      { q: "What should you wear while cycling?", opts: ["Scarf", "Gloves", "Helmet ⛑️", "Sunglasses"], ans: 2, emoji: "🚲" },
+      { q: "Before crossing road, look:", opts: ["Up only", "Down only", "Left and Right 👀", "Behind"], ans: 2, emoji: "👀" }
+    ],
+    writing: { prompt: "Write 3 road safety rules that you follow.", hint: "Think about what you do when crossing the road." }
+  },
+  {
+    id: 12,
+    icon: "🌙",
+    name: "Day and Night",
+    color: "#4361EE",
+    story: {
+      title: "Day and Night",
+      text: `Every day the <span class="highlight" onclick="showWord('sun','The star that gives us light and warmth')">sun</span> rises in the <span class="highlight" onclick="showWord('east','The direction where sun rises')">east</span>.
+It is <span class="highlight" onclick="showWord('morning','The early part of the day')">morning</span> when the sun rises.
+During the <span class="highlight" onclick="showWord('day','The time when the sun is up')">day</span>, there is light all around.
+We go to school, work and play during the day.
+In the <span class="highlight" onclick="showWord('evening','The time after afternoon before night')">evening</span>, the sun sets in the <span class="highlight" onclick="showWord('west','The direction where sun sets')">west</span>.
+Then <span class="highlight" onclick="showWord('night','The dark time when we sleep')">night</span> comes. The sky becomes dark.
+The <span class="highlight" onclick="showWord('moon','The white round object that lights the night sky')">moon</span> and <span class="highlight" onclick="showWord('stars','Tiny lights we see in the night sky')">stars</span> shine at night.
+Animals like owls come out at night.
+We sleep at night so our body can <span class="highlight" onclick="showWord('rest','To relax and get energy back')">rest</span>.
+In the morning, a new day begins again!`
+    },
+    vocab: [
+      { word: "Sun", emoji: "☀️", meaning: "The bright star that gives us light and heat in the day" },
+      { word: "Moon", emoji: "🌙", meaning: "The round white object that shines at night" },
+      { word: "Stars", emoji: "⭐", meaning: "Tiny bright lights we see in the night sky" },
+      { word: "Morning", emoji: "🌅", meaning: "The early part of the day when sun rises" },
+      { word: "Night", emoji: "🌃", meaning: "The dark time after sunset when we sleep" }
+    ],
+    grammar: {
+      title: "Prepositions – In, On, At, Under",
+      explanation: "A <b>preposition</b> tells us where something is or when something happens.<br><br>Common prepositions:<br>• <b>In</b> — inside → The bird is <b>in</b> the nest 🪹<br>• <b>On</b> — on top of → The book is <b>on</b> the table 📚<br>• <b>At</b> — a specific place or time → Sleep <b>at</b> night 🌙<br>• <b>Under</b> — below → The cat is <b>under</b> the chair 🐱<br>• <b>Above</b> — higher than → Stars are <b>above</b> us ⭐",
+      examples: ["in the sky", "on the table", "at school", "under the tree", "above the clouds"]
+    },
+    game: {
+      type: "sentence",
+      title: "🧩 Build the Day/Night Sentence!",
+      sentences: [
+        { words: ["The", "sun", "rises", "in", "the", "east"], answer: "The sun rises in the east" },
+        { words: ["Stars", "shine", "at", "night"], answer: "Stars shine at night" },
+        { words: ["We", "sleep", "at", "night"], answer: "We sleep at night" }
+      ]
+    },
+    quiz: [
+      { q: "Where does the sun rise?", opts: ["West", "North", "East 🌅", "South"], ans: 2, emoji: "☀️" },
+      { q: "Where does the sun set?", opts: ["East", "West 🌇", "North", "South"], ans: 1, emoji: "🌇" },
+      { q: "Complete: Stars shine ___ the sky.", opts: ["under", "in", "above ⭐", "below"], ans: 2, emoji: "📝" },
+      { q: "Which animal comes out at night?", opts: ["Hen 🐓", "Cow 🐄", "Owl 🦉", "Dog 🐕"], ans: 2, emoji: "🌙" },
+      { q: "We sleep at night for:", opts: ["Fun", "Work", "Rest 😴", "Study"], ans: 2, emoji: "😴" }
+    ],
+    writing: { prompt: "Describe what you see in the day and at night.", hint: "Sun, moon, stars, birds, darkness, light..." }
+  }
+];
+
+// Alphabet data
+const ALPHABET = [
+  { l: "A", w: "Apple", e: "🍎" }, { l: "B", w: "Ball", e: "⚽" },
+  { l: "C", w: "Cat", e: "🐱" }, { l: "D", w: "Dog", e: "🐕" },
+  { l: "E", w: "Egg", e: "🥚" }, { l: "F", w: "Fish", e: "🐠" },
+  { l: "G", w: "Goat", e: "🐐" }, { l: "H", w: "Hat", e: "🎩" },
+  { l: "I", w: "Ice", e: "🧊" }, { l: "J", w: "Jar", e: "🫙" },
+  { l: "K", w: "Kite", e: "🪁" }, { l: "L", w: "Lion", e: "🦁" },
+  { l: "M", w: "Mango", e: "🥭" }, { l: "N", w: "Net", e: "🥅" },
+  { l: "O", w: "Orange", e: "🍊" }, { l: "P", w: "Pen", e: "✏️" },
+  { l: "Q", w: "Queen", e: "👸" }, { l: "R", w: "Rain", e: "🌧️" },
+  { l: "S", w: "Sun", e: "☀️" }, { l: "T", w: "Tree", e: "🌳" },
+  { l: "U", w: "Umbrella", e: "☂️" }, { l: "V", w: "Van", e: "🚐" },
+  { l: "W", w: "Water", e: "💧" }, { l: "X", w: "X-ray", e: "🔬" },
+  { l: "Y", w: "Yak", e: "🦬" }, { l: "Z", w: "Zebra", e: "🦓" }
+];
+
+// Badges
+const BADGES = [
+  { id: "first_star", name: "First Star", icon: "⭐", req: 1, desc: "Earned first star" },
+  { id: "quick_learner", name: "Quick Learner", icon: "⚡", req: 3, desc: "Completed 3 chapters" },
+  { id: "bookworm", name: "Book Worm", icon: "📚", req: 5, desc: "Read 5 stories" },
+  { id: "quiz_master", name: "Quiz Master", icon: "🏆", req: 25, desc: "Earned 25+ stars" },
+  { id: "half_way", name: "Half Way!", icon: "🌟", req: 6, desc: "Completed 6 chapters" },
+  { id: "champion", name: "Champion!", icon: "🥇", req: 12, desc: "Completed all chapters" }
+];
+
+// ============================================================
+// STATE MANAGEMENT
+// ============================================================
+let state = {
+  currentChapter: 0,
+  currentTab: 'story',
+  quizState: { q: 0, score: 0, answered: false },
+  vocabState: { index: 0, flipped: false },
+  gameState: {},
+  spellingState: { wordIndex: 0, answer: [], letterStates: [] },
+  sentenceState: { sentenceIndex: 0, builtWords: [] }
+};
+
+function loadProgress() {
+  try {
+    return JSON.parse(localStorage.getItem('jkbose_class2_progress')) || {};
+  } catch { return {}; }
+}
+
+function saveProgress(data) {
+  localStorage.setItem('jkbose_class2_progress', JSON.stringify(data));
+}
+
+let progress = loadProgress();
+
+function getChapterProgress(chId) {
+  return progress[`ch_${chId}`] || { stars: 0, quizDone: false, storyRead: false };
+}
+
+function setChapterProgress(chId, data) {
+  progress[`ch_${chId}`] = { ...getChapterProgress(chId), ...data };
+  saveProgress(progress);
+  updateHomeProgress();
+}
+
+function getTotalStars() {
+  return CHAPTERS.reduce((sum, ch) => sum + (getChapterProgress(ch.id).stars || 0), 0);
+}
+
+function getBookmarks() {
+  return progress.bookmarks || [];
+}
+
+function toggleBookmarkChapter(chId) {
+  let bm = getBookmarks();
+  const idx = bm.indexOf(chId);
+  if (idx > -1) bm.splice(idx, 1);
+  else bm.push(chId);
+  progress.bookmarks = bm;
+  saveProgress(progress);
+}
+
+function isBookmarked(chId) {
+  return getBookmarks().includes(chId);
+}
+
+// ============================================================
+// SCREEN NAVIGATION
+// ============================================================
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (id === 'home-screen') updateHomeProgress();
+  if (id === 'chapters-screen') renderChapterGrid();
+  if (id === 'progress-screen') renderProgressScreen();
+  if (id === 'bookmarks-screen') renderBookmarks();
+  window.scrollTo(0, 0);
+}
+
+function updateHomeProgress() {
+  const done = CHAPTERS.filter(ch => getChapterProgress(ch.id).storyRead).length;
+  const pct = Math.round((done / CHAPTERS.length) * 100);
+  const bar = document.getElementById('overall-progress-bar');
+  const txt = document.getElementById('overall-progress-text');
+  if (bar) bar.style.width = pct + '%';
+  if (txt) txt.textContent = `${pct}% Complete (${done}/${CHAPTERS.length} chapters)`;
+
+  // Recent chapters
+  const rc = document.getElementById('recent-chapters');
+  if (rc) {
+    const recent = CHAPTERS.slice(0, 4);
+    rc.innerHTML = recent.map(ch => {
+      const cp = getChapterProgress(ch.id);
+      return `<div style="display:flex;align-items:center;gap:12px;background:white;border-radius:14px;padding:12px 14px;margin-bottom:10px;box-shadow:0 3px 15px rgba(0,0,0,0.08);cursor:pointer" onclick="openChapter(${ch.id - 1})">
+        <span style="font-size:1.8rem">${ch.icon}</span>
+        <div style="flex:1">
+          <div style="font-weight:800;font-size:0.9rem;color:#2D3436">Chapter ${ch.id}: ${ch.name}</div>
+          <div style="color:${ch.color};font-size:0.8rem;font-weight:700">${cp.storyRead ? '✅ Read' : '📖 Not read yet'}</div>
+        </div>
+        <div style="color:#FFD93D;font-size:0.9rem">${'⭐'.repeat(cp.stars || 0)}</div>
+      </div>`;
+    }).join('');
+  }
+}
+
+// ============================================================
+// CHAPTER GRID
+// ============================================================
+function renderChapterGrid() {
+  const grid = document.getElementById('chapter-grid');
+  if (!grid) return;
+  grid.innerHTML = CHAPTERS.map((ch, i) => {
+    const cp = getChapterProgress(ch.id);
+    return `<div class="chapter-card ${cp.storyRead ? 'completed' : ''}" onclick="openChapter(${i})">
+      ${cp.storyRead ? '<div class="ch-badge">✅ Done</div>' : ''}
+      <span class="ch-icon">${ch.icon}</span>
+      <div class="ch-num">Chapter ${ch.id}</div>
+      <div class="ch-name">${ch.name}</div>
+      <div class="ch-stars">${'⭐'.repeat(cp.stars || 0)}${'☆'.repeat(Math.max(0, 5 - (cp.stars || 0)))}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('total-stars-bar').textContent = getTotalStars();
+}
+
+function filterChapters(q) {
+  const items = document.querySelectorAll('.chapter-card');
+  items.forEach((card, i) => {
+    const matches = CHAPTERS[i].name.toLowerCase().includes(q.toLowerCase());
+    card.style.display = matches ? '' : 'none';
+  });
+}
+
+// ============================================================
+// OPEN CHAPTER
+// ============================================================
+function openChapter(idx) {
+  state.currentChapter = idx;
+  const ch = CHAPTERS[idx];
+  document.getElementById('chapter-screen-title').textContent = `Ch.${ch.id}: ${ch.name}`;
+  document.getElementById('bookmark-btn').textContent = isBookmarked(ch.id) ? '🔖' : '🏷️';
+
+  setChapterProgress(ch.id, { storyRead: true });
+
+  showTab('story');
+  renderStory(ch);
+  renderVocab(ch);
+  renderGrammar(ch);
+  renderGame(ch);
+  renderQuiz(ch);
+  renderWriting(ch);
+  showScreen('chapter-screen');
+}
+
+function showTab(tab) {
+  state.currentTab = tab;
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`tab-${tab}`).classList.add('active');
+  document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+}
+
+function toggleBookmark() {
+  const ch = CHAPTERS[state.currentChapter];
+  toggleBookmarkChapter(ch.id);
+  document.getElementById('bookmark-btn').textContent = isBookmarked(ch.id) ? '🔖' : '🏷️';
+}
+
+// ============================================================
+// STORY TAB
+// ============================================================
+function renderStory(ch) {
+  const el = document.getElementById('tab-story');
+  el.innerHTML = `
+    <div class="story-card">
+      <div class="story-title">${ch.icon} ${ch.story.title}</div>
+      <div class="story-text">${ch.story.text}</div>
+    </div>
+    <div style="text-align:center;padding:8px 0 16px">
+      <button class="btn btn-primary" onclick="showTab('vocab')">Next: Vocabulary →</button>
+    </div>`;
+}
+
+function showWord(word, meaning) {
+  showModal(`<div style="font-size:1.5rem;font-weight:900;color:var(--purple);margin-bottom:8px">${word}</div>
+    <div style="color:#555;font-size:1rem;line-height:1.5">${meaning}</div>
+    <button class="btn btn-primary" style="margin-top:16px;padding:10px 24px;font-size:0.9rem" onclick="closeModal()">Got it! 👍</button>`);
+}
+
+// ============================================================
+// VOCAB TAB
+// ============================================================
+function renderVocab(ch) {
+  state.vocabState = { index: 0, flipped: false };
+  updateVocabCard(ch);
+}
+
+function updateVocabCard(ch) {
+  const el = document.getElementById('tab-vocab');
+  const v = ch.vocab[state.vocabState.index];
+  el.innerHTML = `
+    <div style="text-align:center;padding:8px 0 4px">
+      <div style="font-size:0.85rem;color:#888;font-weight:700">Tap card to flip!</div>
+    </div>
+    <div class="flashcard-container" onclick="flipCard(this)">
+      <div class="flashcard ${state.vocabState.flipped ? 'flipped' : ''}">
+        <div class="flashcard-face flashcard-front">
+          <div class="flashcard-emoji">${v.emoji}</div>
+          <div class="flashcard-word">${v.word}</div>
+          <div class="flashcard-hint">Tap to see meaning →</div>
+        </div>
+        <div class="flashcard-face flashcard-back">
+          <div class="flashcard-emoji">${v.emoji}</div>
+          <div class="flashcard-meaning">${v.meaning}</div>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard-nav">
+      <button class="fc-nav-btn" onclick="prevCard()">◀</button>
+      <span class="fc-counter">${state.vocabState.index + 1} / ${ch.vocab.length}</span>
+      <button class="fc-nav-btn" onclick="nextCard()">▶</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:16px">
+      ${ch.vocab.map((vv, i) => `<div style="background:${i===state.vocabState.index?'var(--blue)':'#f0f4ff'};color:${i===state.vocabState.index?'white':'var(--dark)'};border-radius:10px;padding:8px;text-align:center;cursor:pointer;font-size:0.8rem;font-weight:700" onclick="jumpVocab(${i})">${vv.emoji} ${vv.word}</div>`).join('')}
+    </div>
+    <div style="text-align:center;padding:0 16px 16px">
+      <button class="btn btn-success btn-full" onclick="showTab('grammar')">Next: Grammar →</button>
+    </div>`;
+}
+
+function flipCard(el) {
+  const card = el.querySelector('.flashcard');
+  state.vocabState.flipped = !state.vocabState.flipped;
+  card.classList.toggle('flipped');
+}
+
+function prevCard() {
+  const ch = CHAPTERS[state.currentChapter];
+  state.vocabState.index = (state.vocabState.index - 1 + ch.vocab.length) % ch.vocab.length;
+  state.vocabState.flipped = false;
+  updateVocabCard(ch);
+}
+
+function nextCard() {
+  const ch = CHAPTERS[state.currentChapter];
+  state.vocabState.index = (state.vocabState.index + 1) % ch.vocab.length;
+  state.vocabState.flipped = false;
+  updateVocabCard(ch);
+}
+
+function jumpVocab(i) {
+  const ch = CHAPTERS[state.currentChapter];
+  state.vocabState.index = i;
+  state.vocabState.flipped = false;
+  updateVocabCard(ch);
+}
+
+// ============================================================
+// GRAMMAR TAB
+// ============================================================
+function renderGrammar(ch) {
+  const el = document.getElementById('tab-grammar');
+  el.innerHTML = `
+    <div class="story-card">
+      <div class="story-title">📝 ${ch.grammar.title}</div>
+      <div class="grammar-box">
+        <p>${ch.grammar.explanation}</p>
+      </div>
+      <div style="margin-top:12px">
+        <div style="font-size:0.9rem;font-weight:800;color:var(--dark);margin-bottom:8px">Examples:</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          ${ch.grammar.examples.map(ex => `<span style="background:linear-gradient(135deg,var(--blue),var(--purple));color:white;padding:6px 14px;border-radius:20px;font-size:0.85rem;font-weight:700">${ex}</span>`).join('')}
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;padding:8px 16px 16px">
+      <button class="btn btn-warning btn-full" onclick="showTab('game')">Next: Play Game →</button>
+    </div>`;
+}
+
+// ============================================================
+// GAME TAB
+// ============================================================
+function renderGame(ch) {
+  const el = document.getElementById('tab-game');
+  if (ch.game.type === 'match') renderMatchGame(ch, el);
+  else if (ch.game.type === 'sentence') renderSentenceGame(ch, el);
+  else if (ch.game.type === 'spelling') renderSpellingGame(ch, el);
+}
+
+// -- Match Game --
+function renderMatchGame(ch, el) {
+  const pairs = [...ch.game.pairs];
+  const words = pairs.map(p => p.word).sort(() => Math.random() - 0.5);
+  const emojis = pairs.map(p => p.emoji).sort(() => Math.random() - 0.5);
+  let selected = null;
+  let matched = {};
+
+  function buildHTML() {
+    return `<div class="game-container">
+      <div class="game-title">${ch.game.title}</div>
+      <div style="font-size:0.8rem;color:#888;text-align:center;margin-bottom:12px">Tap a word, then tap the matching picture!</div>
+      <div class="match-grid">
+        <div class="match-col" id="mc-words">
+          ${words.map((w, i) => `<div class="match-item ${matched[`w${i}`]?'matched':''}" data-type="word" data-idx="${i}" onclick="handleMatch(this,'word',${i},'${w}',words,emojis)">${w}</div>`).join('')}
+        </div>
+        <div class="match-col" id="mc-emojis">
+          ${emojis.map((e, i) => `<div class="match-item ${matched[`e${i}`]?'matched':''}" data-type="emoji" data-idx="${i}" onclick="handleMatch(this,'emoji',${i},'${e}',words,emojis)">${e}</div>`).join('')}
+        </div>
+      </div>
+      <div id="match-score" style="text-align:center;margin-top:16px;font-weight:800;font-size:1rem;color:var(--green)"></div>
+    </div>
+    <div style="text-align:center;padding:16px">
+      <button class="btn btn-primary" onclick="renderGame(CHAPTERS[${state.currentChapter}])">🔄 Restart</button>
+      <button class="btn btn-success" style="margin-left:8px" onclick="showTab('quiz')">Next: Quiz →</button>
+    </div>`;
+  }
+
+  el.innerHTML = buildHTML();
+
+  // Match game state management via closures
+  let localSelected = null;
+  let localMatched = 0;
+
+  el.querySelectorAll('.match-item').forEach(item => {
+    item.addEventListener('click', function() {
+      if (this.classList.contains('matched')) return;
+      if (!localSelected) {
+        el.querySelectorAll('.match-item.selected').forEach(i => i.classList.remove('selected'));
+        this.classList.add('selected');
+        localSelected = this;
+      } else if (localSelected === this) {
+        this.classList.remove('selected');
+        localSelected = null;
+      } else {
+        const a = localSelected;
+        const b = this;
+        const aType = a.dataset.type;
+        const bType = b.dataset.type;
+        if (aType === bType) {
+          a.classList.remove('selected');
+          b.classList.add('selected');
+          localSelected = b;
+          return;
+        }
+        const wordEl = aType === 'word' ? a : b;
+        const emojiEl = aType === 'emoji' ? a : b;
+        const wordIdx = parseInt(wordEl.dataset.idx);
+        const emojiIdx = parseInt(emojiEl.dataset.idx);
+        const originalWord = words[wordIdx];
+        const originalEmoji = emojis[emojiIdx];
+        const isMatch = pairs.some(p => p.word === originalWord && p.emoji === originalEmoji);
+
+        if (isMatch) {
+          wordEl.classList.remove('selected');
+          emojiEl.classList.remove('selected');
+          wordEl.classList.add('matched');
+          emojiEl.classList.add('matched');
+          localMatched++;
+          localSelected = null;
+          const scoreEl = el.querySelector('#match-score');
+          if (scoreEl) {
+            if (localMatched === pairs.length) {
+              scoreEl.innerHTML = '🎉 All matched! Perfect score! ⭐⭐⭐';
+              celebrate();
+              addStar();
+            } else {
+              scoreEl.innerHTML = `✅ ${localMatched}/${pairs.length} matched`;
+            }
+          }
+        } else {
+          wordEl.classList.add('wrong-match');
+          emojiEl.classList.add('wrong-match');
+          setTimeout(() => {
+            wordEl.classList.remove('wrong-match', 'selected');
+            emojiEl.classList.remove('wrong-match', 'selected');
+          }, 600);
+          localSelected = null;
+        }
+      }
+    });
+  });
+}
+
+// -- Sentence Builder --
+function renderSentenceGame(ch, el) {
+  state.sentenceState = { sentenceIndex: 0, builtWords: [] };
+  updateSentenceGame(ch, el);
+}
+
+function updateSentenceGame(ch, el) {
+  const s = ch.game.sentences[state.sentenceState.sentenceIndex];
+  const shuffled = [...s.words].sort(() => Math.random() - 0.5);
+  state.sentenceState.builtWords = [];
+
+  el.innerHTML = `<div class="game-container">
+    <div class="game-title">${ch.game.title}</div>
+    <div style="font-size:0.85rem;color:#888;text-align:center;margin-bottom:8px">Sentence ${state.sentenceState.sentenceIndex+1}/${ch.game.sentences.length}</div>
+    <div style="font-size:0.8rem;color:#666;text-align:center;margin-bottom:10px">Tap words to build the sentence:</div>
+    <div class="sentence-display" id="sentence-built"></div>
+    <div class="word-bank" id="word-bank">
+      ${shuffled.map((w, i) => `<button class="word-chip" data-word="${w}" data-idx="${i}" onclick="addWord(this,'${w}')">${w}</button>`).join('')}
+    </div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn btn-warning" style="flex:1" onclick="clearSentence()">🗑️ Clear</button>
+      <button class="btn btn-primary" style="flex:1" onclick="checkSentence('${s.answer}')">✅ Check</button>
+    </div>
+    <div id="sentence-feedback" style="margin-top:10px"></div>
+  </div>
+  <div style="text-align:center;padding:16px">
+    <button class="btn btn-success" onclick="showTab('quiz')">Next: Quiz →</button>
+  </div>`;
+}
+
+function addWord(btn, word) {
+  if (btn.classList.contains('used')) return;
+  btn.classList.add('used');
+  state.sentenceState.builtWords.push(word);
+  const built = document.getElementById('sentence-built');
+  if (built) {
+    const span = document.createElement('span');
+    span.className = 'word-slot';
+    span.textContent = word;
+    span.onclick = function() { removeWord(this, word, btn); };
+    built.appendChild(span);
+  }
+}
+
+function removeWord(span, word, origBtn) {
+  span.remove();
+  const idx = state.sentenceState.builtWords.lastIndexOf(word);
+  if (idx > -1) state.sentenceState.builtWords.splice(idx, 1);
+  if (origBtn) origBtn.classList.remove('used');
+}
+
+function clearSentence() {
+  state.sentenceState.builtWords = [];
+  const built = document.getElementById('sentence-built');
+  if (built) built.innerHTML = '';
+  document.querySelectorAll('.word-chip').forEach(b => b.classList.remove('used'));
+}
+
+function checkSentence(answer) {
+  const built = state.sentenceState.builtWords.join(' ');
+  const fb = document.getElementById('sentence-feedback');
+  if (!fb) return;
+  if (built.toLowerCase() === answer.toLowerCase()) {
+    fb.innerHTML = `<div class="quiz-feedback feedback-correct">🎉 Correct! "${answer}"</div>`;
+    celebrate();
+    addStar();
+    const ch = CHAPTERS[state.currentChapter];
+    setTimeout(() => {
+      if (state.sentenceState.sentenceIndex < ch.game.sentences.length - 1) {
+        state.sentenceState.sentenceIndex++;
+        updateSentenceGame(ch, document.getElementById('tab-game'));
+      }
+    }, 1500);
+  } else {
+    fb.innerHTML = `<div class="quiz-feedback feedback-wrong">❌ Not quite! Try again. Hint: ${answer.split(' ').length} words</div>`;
+  }
+}
+
+// -- Spelling Game --
+function renderSpellingGame(ch, el) {
+  state.spellingState = { wordIndex: 0, answer: [], letterStates: [] };
+  updateSpellingGame(ch, el);
+}
+
+function updateSpellingGame(ch, el) {
+  const w = ch.game.words[state.spellingState.wordIndex];
+  const letters = w.word.split('').sort(() => Math.random() - 0.5);
+  state.spellingState.answer = [];
+  state.spellingState.letterStates = letters.map(() => false);
+
+  el.innerHTML = `<div class="game-container">
+    <div class="game-title">${ch.game.title}</div>
+    <div style="text-align:center;margin-bottom:12px">
+      <div style="font-size:3rem">${w.emoji}</div>
+      <div style="font-size:0.9rem;color:#888;font-weight:700">Word ${state.spellingState.wordIndex+1}/${ch.game.words.length}: ${w.hint}</div>
+    </div>
+    <div class="spelling-answer" id="spell-ans"></div>
+    <div class="letter-tiles" id="letter-tiles">
+      ${letters.map((l, i) => `<button class="letter-tile" data-idx="${i}" onclick="addLetter(this,'${l}',${i})">${l}</button>`).join('')}
+    </div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn btn-warning" style="flex:1" onclick="clearSpelling()">🗑️ Clear</button>
+      <button class="btn btn-primary" style="flex:1" onclick="checkSpelling('${w.word}')">✅ Check</button>
+    </div>
+    <div id="spell-feedback" style="margin-top:10px"></div>
+  </div>
+  <div style="text-align:center;padding:16px">
+    <button class="btn btn-success" onclick="showTab('quiz')">Next: Quiz →</button>
+  </div>`;
+}
+
+function addLetter(btn, letter, idx) {
+  if (btn.classList.contains('used')) return;
+  btn.classList.add('used');
+  state.spellingState.answer.push({ letter, idx });
+  const ansDiv = document.getElementById('spell-ans');
+  if (ansDiv) {
+    const tile = document.createElement('div');
+    tile.className = 'ans-tile';
+    tile.textContent = letter;
+    tile.onclick = function() { removeLetter(this, idx); };
+    ansDiv.appendChild(tile);
+  }
+}
+
+function removeLetter(tile, idx) {
+  tile.remove();
+  const i = state.spellingState.answer.findIndex(a => a.idx === idx);
+  if (i > -1) state.spellingState.answer.splice(i, 1);
+  const btn = document.querySelector(`.letter-tile[data-idx="${idx}"]`);
+  if (btn) btn.classList.remove('used');
+}
+
+function clearSpelling() {
+  state.spellingState.answer = [];
+  const ansDiv = document.getElementById('spell-ans');
+  if (ansDiv) ansDiv.innerHTML = '';
+  document.querySelectorAll('.letter-tile').forEach(b => b.classList.remove('used'));
+}
+
+function checkSpelling(word) {
+  const built = state.spellingState.answer.map(a => a.letter).join('');
+  const fb = document.getElementById('spell-feedback');
+  if (!fb) return;
+  if (built === word) {
+    fb.innerHTML = `<div class="quiz-feedback feedback-correct">🎉 Correct! ${word}</div>`;
+    celebrate();
+    addStar();
+    const ch = CHAPTERS[state.currentChapter];
+    setTimeout(() => {
+      if (state.spellingState.wordIndex < ch.game.words.length - 1) {
+        state.spellingState.wordIndex++;
+        updateSpellingGame(ch, document.getElementById('tab-game'));
+      }
+    }, 1500);
+  } else {
+    fb.innerHTML = `<div class="quiz-feedback feedback-wrong">❌ Try again! Hint: ${word.length} letters</div>`;
+  }
+}
+
+// ============================================================
+// QUIZ TAB
+// ============================================================
+function renderQuiz(ch) {
+  state.quizState = { q: 0, score: 0, answered: false };
+  updateQuiz(ch);
+}
+
+function updateQuiz(ch) {
+  const el = document.getElementById('tab-quiz');
+  const qs = ch.quiz;
+  const qi = state.quizState.q;
+
+  if (qi >= qs.length) {
+    showQuizScore(ch, state.quizState.score, qs.length);
+    return;
+  }
+
+  const q = qs[qi];
+  const progress_pct = (qi / qs.length) * 100;
+
+  el.innerHTML = `
+    <div class="quiz-header">
+      <div class="quiz-q-num">Question ${qi+1} of ${qs.length}</div>
+      <div class="quiz-progress"><div class="quiz-progress-fill" style="width:${progress_pct}%"></div></div>
+    </div>
+    <div class="quiz-question">
+      <span class="quiz-emoji">${q.emoji}</span>
+      ${q.q}
+    </div>
+    <div class="quiz-options">
+      ${q.opts.map((opt, i) => `<button class="quiz-opt" onclick="answerQuiz(${i},${q.ans},this)">${opt}</button>`).join('')}
+    </div>
+    <div id="quiz-feedback-el" style="padding:0 0 12px"></div>`;
+}
+
+function answerQuiz(chosen, correct, btn) {
+  if (state.quizState.answered) return;
+  state.quizState.answered = true;
+  const opts = document.querySelectorAll('.quiz-opt');
+  opts.forEach(o => o.disabled = true);
+
+  const ch = CHAPTERS[state.currentChapter];
+  const fb = document.getElementById('quiz-feedback-el');
+  if (chosen === correct) {
+    btn.classList.add('correct');
+    state.quizState.score++;
+    if (fb) fb.innerHTML = `<div class="quiz-feedback feedback-correct">🌟 Correct! Well done!</div>`;
+  } else {
+    btn.classList.add('wrong');
+    opts[correct].classList.add('correct');
+    if (fb) fb.innerHTML = `<div class="quiz-feedback feedback-wrong">❌ Not quite! The answer is: ${ch.quiz[state.quizState.q].opts[correct]}</div>`;
+  }
+
+  setTimeout(() => {
+    state.quizState.q++;
+    state.quizState.answered = false;
+    updateQuiz(ch);
+  }, 1800);
+}
+
+function showQuizScore(ch, score, total) {
+  const pct = (score / total) * 100;
+  const stars = pct >= 80 ? 3 : pct >= 60 ? 2 : pct >= 40 ? 1 : 0;
+  const emoji = pct === 100 ? '🏆' : pct >= 80 ? '🌟' : pct >= 60 ? '😊' : pct >= 40 ? '📚' : '💪';
+  const msg = pct === 100 ? 'Perfect score! Genius!' : pct >= 80 ? 'Excellent work!' : pct >= 60 ? 'Good job!' : pct >= 40 ? 'Keep practicing!' : 'Try again!';
+
+  setChapterProgress(ch.id, { stars, quizDone: true });
+  if (stars > 0) celebrate();
+
+  document.getElementById('tab-quiz').innerHTML = `
+    <div class="score-screen">
+      <span class="score-emoji">${emoji}</span>
+      <div class="score-num">${score}/${total}</div>
+      <div class="score-msg">${msg}</div>
+      <div class="score-stars">${'⭐'.repeat(stars)}${'☆'.repeat(3-stars)}</div>
+      <div style="display:flex;flex-direction:column;gap:10px;width:100%">
+        <button class="btn btn-primary btn-full" onclick="renderQuiz(CHAPTERS[${state.currentChapter}])">🔄 Try Again</button>
+        <button class="btn btn-success btn-full" onclick="showTab('writing')">Next: Writing Practice →</button>
+        <button class="btn btn-warning btn-full" onclick="showScreen('chapters-screen')">📚 Back to Chapters</button>
+      </div>
+    </div>`;
+}
+
+// ============================================================
+// WRITING TAB
+// ============================================================
+function renderWriting(ch) {
+  const el = document.getElementById('tab-writing');
+  const saved = progress[`write_${ch.id}`] || '';
+  el.innerHTML = `
+    <div class="writing-prompt">
+      <div class="wp-title">✍️ Writing Practice</div>
+      <div class="wp-hint">📌 ${ch.writing.prompt}</div>
+      <div style="font-size:0.8rem;color:#888;margin-top:4px">💡 Hint: ${ch.writing.hint}</div>
+    </div>
+    <div class="lined-paper">
+      <textarea placeholder="Start writing here... ✏️" id="writing-area" oninput="saveWriting(${ch.id},this.value)">${saved}</textarea>
+    </div>
+    <div style="display:flex;gap:8px;padding:12px 0 16px">
+      <button class="btn btn-success" style="flex:1" onclick="saveWritingNow(${ch.id})">💾 Save</button>
+      <button class="btn btn-danger" style="flex:1" onclick="clearWriting(${ch.id})">🗑️ Clear</button>
+    </div>
+    <div style="background:#e8f4fd;border-radius:12px;padding:14px;margin-bottom:16px">
+      <div style="font-weight:800;color:var(--blue);margin-bottom:6px">📝 Writing Tips:</div>
+      <div style="font-size:0.85rem;color:#555;line-height:1.6">
+        • Start every sentence with a capital letter<br>
+        • End every sentence with a full stop (.)<br>
+        • Use the vocabulary words you learned<br>
+        • Write neatly and clearly
+      </div>
+    </div>`;
+}
+
+function saveWriting(chId, val) {
+  progress[`write_${chId}`] = val;
+  saveProgress(progress);
+}
+
+function saveWritingNow(chId) {
+  const val = document.getElementById('writing-area')?.value;
+  if (val) {
+    saveWriting(chId, val);
+    showModal(`<div style="font-size:2rem">💾</div><h3>Saved!</h3><p>Your writing has been saved.</p><button class="btn btn-primary" style="margin-top:12px" onclick="closeModal()">OK</button>`);
+  }
+}
+
+function clearWriting(chId) {
+  const area = document.getElementById('writing-area');
+  if (area) area.value = '';
+  saveWriting(chId, '');
+}
+
+// ============================================================
+// ALPHABET SCREEN
+// ============================================================
+function showAlphabet() {
+  const grid = document.getElementById('alphabet-grid');
+  if (grid && !grid.innerHTML) {
+    const colors = ['var(--red)', 'var(--orange)', 'var(--yellow)', 'var(--green)', 'var(--teal)', 'var(--blue)', 'var(--purple)', 'var(--pink)'];
+    grid.innerHTML = ALPHABET.map((a, i) => `
+      <div class="alpha-card" style="border-top:3px solid ${colors[i % colors.length]}" onclick="showWord('${a.l} for ${a.w}','${a.e} ${a.w} starts with the letter ${a.l}')">
+        <div class="alpha-upper">${a.l}</div>
+        <div class="alpha-lower">${a.l.toLowerCase()}</div>
+        <div style="font-size:1.2rem">${a.e}</div>
+        <div class="alpha-word">${a.w}</div>
+      </div>`).join('');
+  }
+  showScreen('alphabet-screen');
+}
+
+// ============================================================
+// PROGRESS SCREEN
+// ============================================================
+function renderProgressScreen() {
+  const total = getTotalStars();
+  document.getElementById('total-stars-display').textContent = `${total} ⭐`;
+
+  // Badges
+  const completedChapters = CHAPTERS.filter(ch => getChapterProgress(ch.id).storyRead).length;
+  const badgeGrid = document.getElementById('badge-grid');
+  if (badgeGrid) {
+    badgeGrid.innerHTML = BADGES.map(b => {
+      let earned = false;
+      if (b.id === 'first_star') earned = total >= 1;
+      else if (b.id === 'quick_learner') earned = completedChapters >= 3;
+      else if (b.id === 'bookworm') earned = completedChapters >= 5;
+      else if (b.id === 'quiz_master') earned = total >= 25;
+      else if (b.id === 'half_way') earned = completedChapters >= 6;
+      else if (b.id === 'champion') earned = completedChapters >= 12;
+      return `<div class="badge-item ${earned ? 'earned' : ''}">
+        <div class="badge-icon">${b.icon}</div>
+        <div class="badge-name">${b.name}</div>
+        ${!earned ? `<div style="font-size:0.6rem;color:#aaa">${b.desc}</div>` : ''}
+      </div>`;
+    }).join('');
+  }
+
+  // Chapter list
+  const list = document.getElementById('chapter-progress-list');
+  if (list) {
+    list.innerHTML = CHAPTERS.map(ch => {
+      const cp = getChapterProgress(ch.id);
+      return `<div class="ch-prog-item">
+        <span class="ch-prog-icon">${ch.icon}</span>
+        <div class="ch-prog-name">Ch.${ch.id}: ${ch.name}</div>
+        <div class="ch-prog-stars">${'⭐'.repeat(cp.stars || 0)}${!cp.storyRead ? '<span style="font-size:0.7rem;color:#aaa;margin-left:4px">Not started</span>' : ''}</div>
+      </div>`;
+    }).join('');
+  }
+}
+
+// ============================================================
+// BOOKMARKS
+// ============================================================
+function renderBookmarks() {
+  const bm = getBookmarks();
+  const list = document.getElementById('bookmarks-list');
+  if (!list) return;
+  if (bm.length === 0) {
+    list.innerHTML = `<div class="bookmark-empty">🔖<br><br>No bookmarks yet!<br><span style="font-size:0.9rem">Tap 🏷️ in any chapter to bookmark it.</span></div>`;
+    return;
+  }
+  list.innerHTML = bm.map(id => {
+    const ch = CHAPTERS.find(c => c.id === id);
+    if (!ch) return '';
+    return `<div class="bookmark-item" onclick="openChapter(${ch.id - 1})">
+      <span style="font-size:1.8rem">${ch.icon}</span>
+      <div style="flex:1">
+        <div style="font-weight:800;font-size:0.95rem;color:var(--dark)">Ch.${ch.id}: ${ch.name}</div>
+        <div style="font-size:0.8rem;color:#888">Tap to open</div>
+      </div>
+      <span style="color:var(--yellow)">${'⭐'.repeat(getChapterProgress(id).stars || 0)}</span>
+    </div>`;
+  }).join('');
+}
+
+// ============================================================
+// UTILITIES
+// ============================================================
+function addStar() {
+  const ch = CHAPTERS[state.currentChapter];
+  const cp = getChapterProgress(ch.id);
+  if ((cp.stars || 0) < 5) {
+    setChapterProgress(ch.id, { stars: Math.min(5, (cp.stars || 0) + 1) });
+  }
+}
+
+function celebrate() {
+  const el = document.getElementById('celebration');
+  el.innerHTML = '';
+  const colors = ['#FF4757', '#FF6B35', '#FFD93D', '#6BCB77', '#4D96FF', '#9B5DE5', '#F72585'];
+  for (let i = 0; i < 50; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.cssText = `
+      left: ${Math.random() * 100}%;
+      top: -20px;
+      background: ${colors[Math.floor(Math.random() * colors.length)]};
+      width: ${5 + Math.random() * 10}px;
+      height: ${5 + Math.random() * 10}px;
+      border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
+      animation-duration: ${1.5 + Math.random() * 2}s;
+      animation-delay: ${Math.random() * 0.5}s;
+    `;
+    el.appendChild(c);
+  }
+  setTimeout(() => el.innerHTML = '', 3000);
+}
+
+function showModal(html) {
+  document.getElementById('modal-body').innerHTML = html;
+  document.getElementById('modal-overlay').classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('active');
+}
+
+function confirmReset() {
+  showModal(`<div style="font-size:2.5rem">⚠️</div>
+    <h3>Reset All Progress?</h3>
+    <p>This will delete all your stars, progress, and bookmarks. This cannot be undone!</p>
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button class="btn btn-danger" style="flex:1" onclick="resetAll()">Yes, Reset</button>
+      <button class="btn btn-primary" style="flex:1" onclick="closeModal()">Cancel</button>
+    </div>`);
+}
+
+function resetAll() {
+  localStorage.removeItem('jkbose_class2_progress');
+  progress = {};
+  closeModal();
+  updateHomeProgress();
+  showScreen('home-screen');
+  showModal(`<div style="font-size:2.5rem">✅</div><h3>Reset Done!</h3><p>All progress has been cleared. Start fresh!</p><button class="btn btn-primary" style="margin-top:12px" onclick="closeModal()">OK</button>`);
+}
+
+// Close modal on overlay click
+document.getElementById('modal-overlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// ============================================================
+// PWA INSTALLATION
+// ============================================================
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  const banner = document.getElementById('install-banner');
+  if (banner) banner.classList.add('show');
+});
+
+document.getElementById('install-btn').addEventListener('click', async () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    document.getElementById('install-banner').classList.remove('show');
+  }
+});
+
+// ============================================================
+// SERVICE WORKER - Inline blob registration (works offline & in preview)
+// ============================================================
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    try {
+      const swCode = `
+        const CACHE = 'jkbose-class2-v1';
+        self.addEventListener('install', e => {
+          self.skipWaiting();
+        });
+        self.addEventListener('activate', e => {
+          self.clients.claim();
+        });
+        self.addEventListener('fetch', e => {
+          e.respondWith(
+            caches.match(e.request).then(r => r || fetch(e.request).catch(() => new Response('Offline')))
+          );
+        });
+      `;
+      const blob = new Blob([swCode], { type: 'application/javascript' });
+      const swUrl = URL.createObjectURL(blob);
+      navigator.serviceWorker.register(swUrl)
+        .then(() => console.log('✅ App ready for offline use'))
+        .catch(() => {}); // Silent fail - app works fine without SW
+    } catch(e) {
+      // SW not critical - app works fully without it
+    }
+  });
+}
+
+// ============================================================
+// INJECT PWA MANIFEST INLINE (avoids 404 in preview/CDN)
+// ============================================================
+(function() {
+  try {
+    const manifest = {
+      name: "JKBOSE Class 2 English Learning App",
+      short_name: "Class 2 English",
+      description: "Interactive English Learning App by Mateen Yousuf",
+      start_url: "./",
+      display: "standalone",
+      background_color: "#4361EE",
+      theme_color: "#4361EE",
+      orientation: "portrait",
+      icons: [{
+        src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='32' fill='%234361EE'/><text x='96' y='130' font-size='100' text-anchor='middle'>📚</text></svg>",
+        sizes: "192x192", type: "image/svg+xml"
+      }]
+    };
+    const blob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('link');
+    link.rel = 'manifest';
+    link.href = url;
+    document.head.appendChild(link);
+  } catch(e) {}
+})();
+
+// ============================================================
+// INITIALIZE APP
+// ============================================================
+window.addEventListener('DOMContentLoaded', () => {
+  updateHomeProgress();
+
+  // Render title screen floating elements (extra ones)
+  const titleScreen = document.getElementById('title-screen');
+  const extraFloats = ['📖', '🎓', '🌟', '✏️', '🎨', '🏆', '🔤', '🎈'];
+  extraFloats.forEach((emoji, i) => {
+    const el = document.createElement('div');
+    el.className = 'float-elem';
+    el.textContent = emoji;
+    el.style.cssText = `
+      top: ${Math.random() * 90}%;
+      left: ${Math.random() * 90}%;
+      animation-duration: ${3 + Math.random() * 3}s;
+      animation-delay: ${Math.random() * 2}s;
+      font-size: ${1.5 + Math.random()}rem;
+      opacity: 0.4;
+    `;
+    // Don't add too many floating elements
+    if (i < 4) titleScreen.insertBefore(el, titleScreen.firstChild);
+  });
+});
+
+console.log('🎓 JKBOSE Class 2 English App loaded! Created by Mateen Yousuf, Teacher, School Education Department, J&K');
+</script>
+</body>
+</html>
